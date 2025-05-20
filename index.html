@@ -58,6 +58,7 @@
     .hero-section h1 {
         font-size: 3.5em; font-weight: 700; margin-bottom: 15px;
         text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        cursor: default; /* Default cursor, changes if part of easter egg */
     }
     .hero-section .hero-subtitle {
         font-size: 1.5em; font-weight: 300; opacity: 0.9;
@@ -245,50 +246,34 @@
     
     /* ESTILOS GALERÍA */
 .gallery-container {
-    display: flex; /* Mantenemos flex para centrar fácilmente si es necesario */
-    /* flex-wrap: wrap; Ya no es necesario si solo hay un item grande */
-    /* gap: 15px; Ya no es necesario */
-    justify-content: center; /* Centra el gallery-item si es más pequeño que el contenedor */
+    display: flex; 
+    justify-content: center; 
     margin-top: 20px;
 }
 
 .gallery-item {
-    /* ANTERIOR: width: calc(33.333% - 10px); */
-    /* ANTERIOR: max-width: 250px; */
-
-    /* NUEVO: Hacerlo más grande */
-    width: 80%; /* Por ejemplo, que ocupe el 80% del ancho del content-inner-wrapper */
-    max-width: 500px; /* Un máximo para que no se haga demasiado grande en pantallas anchas */
-    /* O un valor fijo si lo prefieres: */
-    /* width: 400px; */
-    
+    width: 80%; 
+    max-width: 500px; 
     cursor: pointer;
     overflow: hidden;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #f0f0f0; /* Placeholder mientras carga la imagen */
-    margin: 0 auto; /* Otra forma de centrar si width es menor que el contenedor */
+    background-color: #f0f0f0; 
+    margin: 0 auto; 
 }
 
-/* Ya no necesitamos esto si solo hay un item que ocupa más espacio */
-/* .gallery-container .gallery-item:first-child {
-    width: 100%;
-    max-width: 400px; 
-} */
-
 .gallery-item:hover { 
-    transform: scale(1.02); /* Un scale un poco más sutil para una imagen más grande */
+    transform: scale(1.02); 
     box-shadow: 0 6px 12px rgba(0,0,0,0.15); 
 }
 
 .gallery-thumbnail {
     width: 100%;
-    height: auto; /* Altura automática basada en aspect-ratio */
+    height: auto; 
     object-fit: cover;
     display: block;
     border-radius: 8px;
-    /* Usar un aspect ratio aproximado de tus imágenes 4000/1844 */
     aspect-ratio: 4000 / 1844; 
 }
 
@@ -305,12 +290,10 @@
         width: auto; height: auto; max-width: 95%; max-height: 95%;
     }
     .gallery-lightbox-image {
-        display: block; max-width: 100%; max-height: calc(100vh - 120px); /* Espacio para caption y controles */
+        display: block; max-width: 100%; max-height: calc(100vh - 120px); 
         object-fit: contain; border-radius: 5px; box-shadow: 0 0 30px rgba(0,0,0,0.5);
-        /* La opacidad y transform se manejan en JS para la carga */
-        transition: opacity 0.3s ease-out; /* Transición suave de opacidad */
+        transition: opacity 0.3s ease-out; 
     }
-    /* .gallery-lightbox.visible .gallery-lightbox-image { transform: scale(1); opacity: 1; } No necesario aquí si JS lo maneja */
     .gallery-lightbox-close {
         position: absolute; top: 15px; right: 20px; font-size: 2.8em; color: #ccc;
         background: none; border: none; cursor: pointer; transition: color 0.3s ease;
@@ -331,7 +314,7 @@
         padding: 7px 12px; border-radius: 4px; font-size: 0.9em; text-align: center;
         max-width: 90%; box-sizing: border-box; transition: opacity 0.3s ease;
         opacity: 0; word-break: break-word; overflow-wrap: break-word;
-        min-height: 1.5em; /* Para que "Cargando..." tenga espacio */
+        min-height: 1.5em; 
     }
     .gallery-lightbox.visible .gallery-lightbox-caption { opacity: 1; }
     .gallery-lightbox-caption:empty { display: none; }
@@ -407,7 +390,7 @@
         opacity: 1 !important;
         transform: translateX(-50%) scale(1); 
     }
-    .notifications-panel.visible[style*="left"] { /* This rule is key for panels positioned by JS */
+    .notifications-panel.visible[style*="left"] { 
          transform: scale(1) !important;
     }
     .notifications-panel h3 {
@@ -445,11 +428,10 @@
     /* --- FIN ESTILOS NOTIFICACIONES --- */
 
     /* === MOBILE & TABLET IMPROVEMENTS === */
-    @media (max-width: 960px) { /* Larger tablets and landscape phones */
+    @media (max-width: 960px) { 
         .content-section {
             padding: 45px 0;
         }
-        /* .gallery-item { width: calc(50% - 7.5px); } Ya no aplica si solo hay 1 miniatura principal */
         .hero-section h1 {
             font-size: 3em;
         }
@@ -458,7 +440,7 @@
         }
     }
 
-    @media (max-width: 768px) { /* Portrait tablets (like iPad Mini) and large phones */
+    @media (max-width: 768px) { 
         .hero-section h1 { font-size: 2.5em; } 
         .hero-section .hero-subtitle { font-size: 1.2em; }
 
@@ -573,14 +555,12 @@
         .notification-dismiss-btn { font-size: 1.3em; right: 5px; }
     }
 
-    @media (max-width: 480px) { /* Smaller Phones */
+    @media (max-width: 480px) { 
         .hero-section { height: 45vh; min-height: 280px; }
         .hero-section h1 { font-size: 1.8em; } 
         .hero-section .hero-subtitle {
             font-size: 1em; max-width: 90%;
         }
-        /* Si solo hay una miniatura de galería, ajustar su tamaño para móvil */
-        /* .gallery-container .gallery-item:first-child { max-width: 90%; } */
 
         .main-nav .content-inner-wrapper {
             flex-direction: column; 
@@ -639,9 +619,6 @@
         }
         .nivel-btn { padding: 12px 15px; font-size: 0.95em; width: 100%; }
 
-        /* .gallery-item { width: 100%; max-width: none; } Ya no aplica si solo hay 1 miniatura principal */
-        /* .gallery-thumbnail { height: 200px; } */
-
         .detalle-nivel-content { padding: 20px 15px; }
         .detalle-nivel-content h2 { font-size: 1.4em; }
         .detalle-nivel-content p { font-size: 0.875em; }
@@ -665,10 +642,215 @@
     @media (min-width: 1025px) { 
         .hero-section { background-attachment: fixed; } 
     }
+
+    /* --- EASTER EGG: TV INTERFERENCE --- */
+    .tv-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(20, 20, 20, 0.7);
+        z-index: -1; 
+        opacity: 0;
+        pointer-events: none;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.3s ease-in-out;
+        /* Base color for interference, will be overridden during shutdown */
+        color: #ccc; /* For any text/icons if they were used directly */
+    }
+
+    .tv-overlay.active {
+        z-index: 99999; 
+        opacity: 1;
+        pointer-events: auto; 
+        backdrop-filter: blur(1.5px) grayscale(70%) brightness(0.85);
+    }
+
+    .tv-static-noise {
+        position: absolute;
+        top: -50%; left: -50%; /* Cover more area for movement */
+        width: 200%; height: 200%;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkAQMAAABKLAcXAAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAChJREFUeAFjPHPmDAEGMCpRFAlQJIJDEoCiGEqgqEROoaiESqgqkRGAAAMA7ysA7rPjLREAAAAASUVORK5CYII='); /* More fine-grained noise */
+        animation: tvStaticAnim 0.08s steps(2) infinite;
+        opacity: 0.12;
+        z-index: 1;
+    }
+
+    @keyframes tvStaticAnim {
+        0% { transform: translate(0, 0); }
+        25% { transform: translate(-2%, -2%); }
+        50% { transform: translate(2%, -2%); }
+        75% { transform: translate(-2%, 2%); }
+        100% { transform: translate(0, 0); }
+    }
+
+    .tv-scanlines {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: repeating-linear-gradient(
+            transparent,
+            transparent 2px,
+            rgba(10, 10, 10, 0.2) 2px, /* Darker scanlines */
+            rgba(10, 10, 10, 0.2) 4px
+        );
+        z-index: 2;
+        opacity: 0.6;
+        animation: tvScanlinesAnim 20s linear infinite;
+    }
+    @keyframes tvScanlinesAnim {
+        from { background-position-y: 0; }
+        to { background-position-y: 150px; } /* Slower scroll */
+    }
+
+    .tv-horizontal-lines {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 3;
+        overflow: hidden;
+    }
+
+    .tv-horizontal-lines .tv-line {
+        position: absolute;
+        left: -10%;
+        width: 120%;
+        background-color: rgba(220, 220, 220, 0.25); /* Brighter, but low opacity */
+        animation-name: tvHorizontalLineAnim;
+        animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95); /* More erratic feel */
+        animation-iteration-count: infinite;
+        box-shadow: 0 0 5px rgba(255,255,255,0.1), 0 0 10px rgba(255,255,255,0.05);
+    }
+
+    .tv-horizontal-lines .tv-line:nth-child(1) {
+        height: 1px; animation-duration: 3.7s; animation-delay: 0s; opacity: 0.5;
+    }
+    .tv-horizontal-lines .tv-line:nth-child(2) {
+        height: 3px; animation-duration: 2.5s; animation-delay: -1.2s; opacity: 0.35;
+    }
+    .tv-horizontal-lines .tv-line:nth-child(3) {
+        height: 2px; animation-duration: 4.9s; animation-delay: -2.5s; opacity: 0.4;
+    }
+     .tv-horizontal-lines .tv-line:nth-child(4) { /* Added one more for variety */
+        height: 1.5px; animation-duration: 3.1s; animation-delay: -0.8s; opacity: 0.45;
+    }
+
+
+    @keyframes tvHorizontalLineAnim {
+        0%   { transform: translateY(5vh) scaleY(0.5); opacity: 0.1; }
+        15%  { transform: translateY(Math.random() * 80 + 10vh) scaleY(Math.random() * 1 + 0.5); opacity: Math.random() * 0.4 + 0.2; }
+        30%  { transform: translateY(Math.random() * 80 + 10vh) scaleY(Math.random() * 1.5 + 0.3); opacity: Math.random() * 0.5 + 0.1; }
+        45%  { transform: translateY(Math.random() * 80 + 10vh) scaleY(Math.random() * 0.8 + 0.8); opacity: Math.random() * 0.3 + 0.3; }
+        60%  { transform: translateY(Math.random() * 80 + 10vh) scaleY(Math.random() * 2 + 0.2); opacity: Math.random() * 0.6 + 0.05; }
+        75%  { transform: translateY(Math.random() * 80 + 10vh) scaleY(Math.random() * 1.2 + 0.6); opacity: Math.random() * 0.4 + 0.15; }
+        90%  { transform: translateY(Math.random() * 80 + 10vh) scaleY(Math.random() * 0.5 + 1); opacity: Math.random() * 0.2 + 0.25; }
+        100% { transform: translateY(105vh) scaleY(0.5); opacity: 0.1; } /* Ensure it goes off screen */
+    }
+    /* Note: Math.random() in CSS keyframes is illustrative; CSS cannot do this directly.
+       The effect will be repetitive. For true randomness, JS would be needed to manipulate styles.
+       The above keyframes are fixed but aim for a varied look. */
+
+
+    body.tv-easter-egg-active-shutdown {
+        background-color: black !important; /* Fondo del body se vuelve negro */
+        transition: background-color 0.3s linear; /* Transición suave si es necesario */
+    }
+
+    /* Shutdown Animation */
+    .tv-shutdown-dot {
+        width: 8px; height: 8px;
+        background-color: #f0f0f0;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        z-index: 10;
+        box-shadow: 0 0 10px 3px #ffffff, 0 0 20px 6px #dddddd, 0 0 30px 9px #bbbbbb;
+    }
+
+    .tv-overlay.tv-shutdown-start {
+        /* El overlay en sí mismo se vuelve negro y opaco */
+        background-color: black !important;
+        opacity: 1 !important;
+        
+        animation: tvClipPathCollapse 1.2s cubic-bezier(0.6, 0.04, 0.98, 0.335) forwards;
+        
+        /* El backdrop-filter afecta a lo que se ve DENTRO del área del clip-path,
+           simulando el apagado de la "imagen" del programa que estaba detrás del overlay.
+           El page-wrapper se estará desvaneciendo al mismo tiempo. */
+        backdrop-filter: blur(1.5px) grayscale(70%) brightness(0.85); /* Estado inicial */
+    }
+
+    .tv-overlay.tv-shutdown-start .tv-static-noise,
+    .tv-overlay.tv-shutdown-start .tv-scanlines,
+    .tv-overlay.tv-shutdown-start .tv-horizontal-lines {
+        animation-play-state: paused;
+        opacity: 0;
+        transition: opacity 0.2s linear;
+    }
+
+    @keyframes tvClipPathCollapse {
+        0% {
+            clip-path: inset(0% 0% 0% 0%);
+            backdrop-filter: blur(1.5px) grayscale(70%) brightness(0.85);
+        }
+        /* La "imagen" (vista a través del backdrop-filter) se oscurece */
+        40% { /* Aumentamos el oscurecimiento más rápido */
+            clip-path: inset(0% 0% 0% 0%);
+            backdrop-filter: blur(1px) grayscale(98%) brightness(0.05); /* Casi negro */
+        }
+        /* Comienza el recorte del overlay negro. El body detrás ya es negro. */
+        50% {
+            clip-path: inset(30% 0% 30% 0%);
+            backdrop-filter: blur(0.5px) grayscale(100%) brightness(0.01); /* Completamente oscuro */
+        }
+        70% {
+            clip-path: inset(49.5% 0% 49.5% 0%); /* Línea delgada */
+            backdrop-filter: none; /* Ya no hay "imagen" que filtrar */
+        }
+        100% {
+            clip-path: inset(50% 50% 50% 50%); /* Desaparece en un punto */
+            backdrop-filter: none;
+        }
+    }
+
+    .tv-overlay.tv-shutdown-start .tv-shutdown-dot {
+        animation: tvDotPulse 0.8s 1.1s ease-out forwards;
+    }
+
+    @keyframes tvDotPulse {
+        0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        30% { transform: translate(-50%, -50%) scale(2.0); opacity: 1; }
+        60% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.9; }
+        100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    }
+
+    .tv-overlay.tv-off {
+        background-color: black !important;
+        opacity: 1 !important;
+        clip-path: none !important;
+        backdrop-filter: none !important;
+        z-index: 99999;
+    }
+    .tv-overlay.tv-off > * {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+
+    body.tv-easter-egg-active .page-wrapper {
+        /* La transición de opacidad se maneja en JS */
+    }
+
 </style>
 </head>
 <body>
-    <div class="page-wrapper">
+    <div class="page-wrapper"> <!-- Este es el contenedor que se desvanecerá -->
         <section class="hero-section" data-aos="fade-in" data-aos-duration="1000">
             <h1>Liceo N°1</h1>
             <p class="hero-subtitle">Paso de los Toros: Educación, Comunidad y Futuro.</p>
@@ -706,14 +888,9 @@
                     Explora algunos momentos y vistas de nuestro liceo. Haz clic en la imagen para verla en detalle y navegar.
                 </p> 
                 <div class="gallery-container" data-aos="fade-up" data-aos-delay="100" data-aos-offset="100"> 
-                    <!-- Solo la primera imagen es explícitamente renderizada aquí.
-                         El JS se encargará de sus atributos y evento de clic.
-                         Las otras imágenes de la galería se definen en el array 'imagesData' en JS. -->
                     <div class="gallery-item">
                         <img src="" alt="" class="gallery-thumbnail">
-                         <!-- src, alt, width, height, loading, decoding se añadirán por JS -->
                     </div>
-                    <!-- No añadir más .gallery-item aquí si se manejan desde JS -->
                 </div> 
             </div> 
         </section> 
@@ -721,6 +898,20 @@
         <section id="contacto-horarios" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-id-card-clip" aria-hidden="true"></i> Información y Horarios </h2> <ul class="info-list"> <li data-aos="fade-up" data-aos-offset="50"><span class="icon-container"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span><span class="info-label">Dirección:</span><span class="info-value">Aparicio Saravia 773, 45100 Paso de los Toros, Dpto. de Tacuarembó.</span></li> <li data-aos="fade-up" data-aos-delay="50" data-aos-offset="50"><span class="icon-container"><i class="fas fa-phone-volume" aria-hidden="true"></i></span><span class="info-label">Teléfono:</span><span class="info-value">4664 2136</span></li> <li data-aos="fade-up" data-aos-delay="100" data-aos-offset="50"><span class="icon-container"><i class="fab fa-instagram" aria-hidden="true"></i></span><span class="info-label">Instagram:</span><span class="info-value">liceo1pasodelostoros</span></li> </ul> <h3 class="subsection-title" data-aos="fade-right" data-aos-offset="100"><i class="fas fa-calendar-alt" aria-hidden="true"></i>Horario de Atención</h3> <ul class="info-list"> <li data-aos="fade-up" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Lunes:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="50" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Martes:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="100" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Miércoles:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="150" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Jueves:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="200" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Viernes:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="250" data-aos-offset="50"><span class="icon-container"><i class="fas fa-door-closed" aria-hidden="true"></i></span><span class="info-label">Sábado:</span> <span class="info-value">Cerrado</span></li> <li data-aos="fade-up" data-aos-delay="300" data-aos-offset="50"><span class="icon-container"><i class="fas fa-door-closed" aria-hidden="true"></i></span><span class="info-label">Domingo:</span> <span class="info-value">Cerrado</span></li> </ul> </div> </section> <section id="ubicacion" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-compass" aria-hidden="true"></i> Encuéntranos </h2> <p data-aos="fade-up" data-aos-offset="100">Visítanos o explora nuestra ubicación en el mapa:</p> <div class="map-link-container" data-aos="zoom-in" data-aos-offset="100"> <button id="googleMapsButton" class="map-link" data-url="https://www.google.com/maps/place/Liceo+numero+1/@-32.8092239,-56.5157008,17.05z/data=!4m6!3m5!1s0x95a64174db22c77b:0x48d2ff2e276d1161!8m2!3d-32.8092421!4d-56.5132229!16s%2Fg%2F11clmpl3r2?entry=ttu&g_ep=EgoyMDI1MDUxMS4wIKXMDSoASAFQAw%3D%3D"> Ver en Google Maps <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> </button> </div> </div> </section> <footer class="main-footer" data-aos="fade-in" data-aos-duration="500"> <div class="content-inner-wrapper"> <p>© <span id="currentYear"></span> Liceo N°1 de Paso de los Toros. Diseño web hecho por un estudiante del Liceo 1 (<i class="fab fa-x-twitter" aria-hidden="true"></i>: WolfInk_Devs)</p> </div> </footer>
     </div>
     <div id="seccion-media" class="detalle-nivel-overlay"> <div class="detalle-nivel-content"> <button class="cerrar-overlay-btn" data-close="seccion-media" aria-label="Cerrar"><i class="fas fa-times" aria-hidden="true"></i></button> <h2><i class="fas fa-book-reader" aria-hidden="true"></i> Educación Media Básica</h2> <p>La Educación Media Básica, también conocida como Ciclo Básico, comprende los primeros tres años de la educación secundaria (1°, 2° y 3° año). Este ciclo es fundamental para consolidar los aprendizajes de la educación primaria y preparar a los estudiantes para los desafíos del Bachillerato.</p> <p>Nuestro enfoque se centra en desarrollar competencias clave, fomentar el pensamiento crítico y la autonomía del estudiante. Ofrecemos un acompañamiento cercano para asegurar una transición exitosa y motivadora. Las asignaturas incluyen Matemáticas, Idioma Español, Ciencias Físicas, Ciencias Computacionales, Biología, Historia, Geografía, Inglés, Arte plastica, Música, y Educación Física.</p> <div class="detalle-nivel-nav"> <button class="nivel-nav-btn" data-open="seccion-bachillerato" data-close-current="seccion-media">Ver Bachillerato</button> <button class="nivel-nav-btn principal-btn" data-close="seccion-media">Volver al Inicio</button> </div> </div> </div> <div id="seccion-bachillerato" class="detalle-nivel-overlay"> <div class="detalle-nivel-content"> <button class="cerrar-overlay-btn" data-close="seccion-bachillerato" aria-label="Cerrar"><i class="fas fa-times" aria-hidden="true"></i></button> <h2><i class="fas fa-user-graduate" aria-hidden="true"></i> Bachillerato</h2> <p>El Bachillerato (4°, 5° y 6° año) permite a los estudiantes profundizar en áreas de conocimiento específicas, preparándolos para la educación superior o el mundo laboral. En el Liceo N°1, ofrecemos todas las orientaciones para que cada estudiante pueda seguir su vocación.</p> <p>Las materias disponibles son: (Insertar materias)</p> <div class="detalle-nivel-nav"> <button class="nivel-nav-btn" data-open="seccion-media" data-close-current="seccion-bachillerato">Ver Educación Media</button> <button class="nivel-nav-btn principal-btn" data-close="seccion-bachillerato">Volver al Inicio</button> </div> </div> </div> <div id="gallery-lightbox" class="gallery-lightbox"> <span class="gallery-lightbox-close" aria-label="Cerrar vista ampliada">×</span> <button class="gallery-lightbox-prev" aria-label="Imagen anterior">❮</button> <button class="gallery-lightbox-next" aria-label="Siguiente imagen">❯</button> <div class="gallery-lightbox-image-container"> <img class="gallery-lightbox-image" src="" alt="Imagen ampliada"> <div class="gallery-lightbox-caption"></div> </div> </div> <a href="#" class="back-to-top" aria-label="Volver arriba"><i class="fas fa-chevron-up" aria-hidden="true"></i></a> <div id="logoOverlay" class="logo-overlay"> <img id="mapsLogoImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Google_Maps_icon_%282020%29.svg/1200px-Google_Maps_icon_%282020%29.svg.png" alt="Google Maps Logo"> </div>
+
+    <!-- EASTER EGG: TV Interference Overlay HTML -->
+    <div id="tvEasterEggOverlay" class="tv-overlay">
+        <div class="tv-static-noise"></div>
+        <div class="tv-scanlines"></div>
+        <div class="tv-horizontal-lines">
+            <div class="tv-line"></div>
+            <div class="tv-line"></div>
+            <div class="tv-line"></div>
+            <div class="tv-line"></div>
+        </div>
+        <div class="tv-shutdown-dot"></div>
+    </div>
+    <!-- END EASTER EGG HTML -->
 
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -736,7 +927,7 @@
 
         AOS.init({ duration: 600, once: true, offset: 50 });
         document.getElementById('currentYear').textContent = new Date().getFullYear();
-        const body = document.body; // Definir body globalmente para el script
+        const body = document.body; 
 
         document.querySelectorAll('.main-nav a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -848,10 +1039,9 @@
         // --- LÓGICA DE GALERÍA MODIFICADA ---
         const galleryContainer = document.querySelector('#galeria .gallery-container');
         const galleryLightbox = document.getElementById('gallery-lightbox');
-        let currentGalleryImageIndex; // Renombrado para evitar conflicto
+        let currentGalleryImageIndex; 
 
-        // Definir los datos de las imágenes directamente aquí
-        const galleryImagesData = [ // Renombrado para evitar conflicto
+        const galleryImagesData = [ 
             { 
                 thumbnailSrc: "exterior2.jpg", 
                 fullSrc: "exterior2.jpg", 
@@ -880,16 +1070,14 @@
             const nextBtn = galleryLightbox.querySelector('.gallery-lightbox-next');
             const caption = galleryLightbox.querySelector('.gallery-lightbox-caption');
 
-            // Configurar la primera (y única) miniatura visible en el HTML
             const firstGalleryItemInHtml = galleryContainer.querySelector('.gallery-item');
             if (firstGalleryItemInHtml) {
                 const firstThumbnailElement = firstGalleryItemInHtml.querySelector('.gallery-thumbnail');
                 if (firstThumbnailElement && galleryImagesData[0]) {
                     const firstImageData = galleryImagesData[0];
-                    firstThumbnailElement.src = firstImageData.thumbnailSrc; // Usará la imagen grande como miniatura
+                    firstThumbnailElement.src = firstImageData.thumbnailSrc; 
                     firstThumbnailElement.alt = firstImageData.alt;
-                    // Atributos para ayudar con el aspect ratio y carga diferida
-                    firstThumbnailElement.setAttribute('width', firstImageData.originalWidth / 10); // Un valor proporcional más pequeño
+                    firstThumbnailElement.setAttribute('width', firstImageData.originalWidth / 10); 
                     firstThumbnailElement.setAttribute('height', firstImageData.originalHeight / 10);
                     firstThumbnailElement.setAttribute('loading', 'lazy');
                     firstThumbnailElement.setAttribute('decoding', 'async');
@@ -910,7 +1098,6 @@
 
             function closeGalleryLightbox() {
                 galleryLightbox.classList.remove('visible');
-                // if (lightImg) { lightImg.src = ""; } // Opcional: Limpiar src para liberar memoria
                 if (!document.querySelector('.detalle-nivel-overlay.visible') &&
                     !document.querySelector('.logo-overlay.visible') &&
                     !document.querySelector('#notificationsPanel.visible')) {
@@ -922,7 +1109,7 @@
             function updateGalleryLightboxImage() {
                 if (galleryImagesData[currentGalleryImageIndex] && lightImg && caption) {
                     lightImg.style.opacity = '0'; 
-                    caption.style.opacity = '1'; // Mostrar caption inmediatamente
+                    caption.style.opacity = '1'; 
                     caption.textContent = "Cargando..."; 
 
                     const currentImageData = galleryImagesData[currentGalleryImageIndex];
@@ -933,13 +1120,13 @@
                         lightImg.style.opacity = '1';
                         caption.textContent = currentImageData.alt;
                         if (!currentImageData.alt?.trim()) {
-                           caption.style.opacity = '0'; // Ocultar si no hay caption
+                           caption.style.opacity = '0'; 
                         }
                     };
                     tempImg.onerror = () => {
                         caption.textContent = "Error al cargar la imagen.";
                         lightImg.alt = "Error de carga";
-                        lightImg.style.opacity = '1'; // Mostrar el error
+                        lightImg.style.opacity = '1'; 
                     };
                     tempImg.src = currentImageData.fullSrc;
                 }
@@ -1399,6 +1586,119 @@
         } else {
             initializeAndRunSupabase();
         }
+
+        // --- EASTER EGG: TV INTERFERENCE LOGIC ---
+        const tvOverlay = document.getElementById('tvEasterEggOverlay');
+        const heroTitleForEasterEgg = document.querySelector('.hero-section h1');
+                const pageWrapper = document.querySelector('.page-wrapper'); 
+        let tvEasterEggActive = false;
+        let heroClickCount = 0;
+        let lastHeroClickTime = 0;
+        // Guardar el color de fondo original del body
+        let originalBodyBackgroundColor = '';
+
+
+        function activateTVEasterEgg() {
+            if (tvEasterEggActive || !tvOverlay) return;
+            tvEasterEggActive = true;
+            console.log("TV Interference Easter Egg Activated!");
+
+            if (lenis) lenis.stop();
+            document.body.classList.add('tv-easter-egg-active');
+            tvOverlay.classList.add('active');
+            
+            // Guardar el color de fondo original del body si no se ha guardado
+            if (!originalBodyBackgroundColor) {
+                originalBodyBackgroundColor = document.body.style.backgroundColor;
+            }
+
+
+            const interferenceDuration = Math.random() * 3000 + 7000; // 7-10 seconds
+            const shutdownAnimationTotalDuration = 2000; // Duración para que el punto termine
+
+            setTimeout(() => {
+                if (!tvEasterEggActive) return; 
+
+                // Oscurecer el body y el page-wrapper
+                document.body.classList.add('tv-easter-egg-active-shutdown'); // Aplica fondo negro al body
+                if (pageWrapper) {
+                    // pageWrapper se desvanece un poco después de que el body se vuelve negro
+                    pageWrapper.style.transition = 'opacity 0.7s ease-out 0.2s'; 
+                    pageWrapper.style.opacity = '0';
+                }
+                
+                // Iniciar la animación del overlay
+                tvOverlay.classList.add('tv-shutdown-start');
+
+
+                setTimeout(() => {
+                    if (!tvEasterEggActive) return;
+                    tvOverlay.classList.add('tv-off');
+                    // No es necesario restaurar el color del body aquí, ya que se requiere recargar la página
+                }, shutdownAnimationTotalDuration); 
+
+            }, interferenceDuration);
+        }
+
+        // 1. Automatic Activation: Check time on load
+        function checkTimeAndActivateTV() {
+            const now = new Date();
+            if (now.getHours() === 3 && now.getMinutes() === 33) {
+            // if (true) { // Para pruebas rápidas
+                activateTVEasterEgg();
+            }
+        }
+        
+        // Asegúrate de que el DOM está listo antes de intentar obtener el color de fondo del body
+        document.addEventListener('DOMContentLoaded', () => {
+            originalBodyBackgroundColor = getComputedStyle(document.body).backgroundColor;
+            checkTimeAndActivateTV(); 
+        });
+        // Si el DOM ya está listo (caso raro, pero por si acaso)
+        if (document.readyState !== 'loading' && !originalBodyBackgroundColor) {
+             originalBodyBackgroundColor = getComputedStyle(document.body).backgroundColor;
+        }
+
+
+        // 2. Manual Activation: 3 quick clicks on hero title
+        if (heroTitleForEasterEgg) {
+            heroTitleForEasterEgg.style.cursor = 'pointer'; 
+            heroTitleForEasterEgg.addEventListener('click', () => {
+                if (tvEasterEggActive) return;
+
+                const currentTime = new Date().getTime();
+                if (currentTime - lastHeroClickTime < 500) { 
+                    heroClickCount++;
+                } else {
+                    heroClickCount = 1; 
+                }
+                lastHeroClickTime = currentTime;
+
+                if (heroClickCount === 3) {
+                    activateTVEasterEgg();
+                    heroClickCount = 0; 
+                }
+            });
+        }
+        
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                const visibleGallery = document.querySelector('#gallery-lightbox.visible');
+                const visibleNivelOverlay = document.querySelector('.detalle-nivel-overlay.visible');
+                const notificationsPanelVisible = notificationsPanel?.classList.contains('visible');
+
+                if (editModeActive) { 
+                    togglePanelEditMode();
+                } else if (visibleGallery) {
+                    closeGalleryLightbox(); 
+                } else if (visibleNivelOverlay) {
+                    closeNivelOverlay(visibleNivelOverlay.id); 
+                } else if (notificationsPanelVisible) {
+                    toggleNotificationsPanel(false);
+                }
+            }
+        });
+
     </script>
 </body>
 </html>
