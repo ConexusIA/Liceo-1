@@ -23,7 +23,6 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* === INICIO CÓDIGO PARA OCULTAR SCROLLBAR PRINCIPAL === */
     html, body {
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none;  /* IE y Edge (versiones antiguas) */
@@ -32,7 +31,6 @@
     body::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Opera, Edge (nuevo) */
     }
-    /* === FIN CÓDIGO PARA OCULTAR SCROLLBAR PRINCIPAL === */
 
     body {
         font-family: 'Poppins', sans-serif;
@@ -41,7 +39,6 @@
         line-height: 1.7;
         font-weight: 300;
     }
-    body.overlay-active {}
 
     .page-wrapper { width: 100%; }
     .content-inner-wrapper {
@@ -92,7 +89,7 @@
     }
     .content-section {
         background-color: var(--card-background); padding: 60px 0;
-        scroll-margin-top: 70px;
+        scroll-margin-top: 70px; /* Offset for sticky nav */
     }
     .content-section + .content-section { border-top: 1px solid #e0e0e0; }
     .section-title {
@@ -245,19 +242,56 @@
         color: var(--background-color); font-size: 0.9em;
     }
     .main-footer p i.fa-x-twitter { color: var(--accent-color); }
-    .gallery-container {
-        display: flex; flex-wrap: wrap; gap: 15px;
-        justify-content: center; margin-top: 20px;
-    }
-    .gallery-item {
-        width: calc(33.333% - 10px); max-width: 250px; cursor: pointer;
-        overflow: hidden; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .gallery-item:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-    .gallery-thumbnail {
-        width: 100%; height: 180px; object-fit: cover; display: block; border-radius: 8px;
-    }
+    
+    /* ESTILOS GALERÍA */
+.gallery-container {
+    display: flex; /* Mantenemos flex para centrar fácilmente si es necesario */
+    /* flex-wrap: wrap; Ya no es necesario si solo hay un item grande */
+    /* gap: 15px; Ya no es necesario */
+    justify-content: center; /* Centra el gallery-item si es más pequeño que el contenedor */
+    margin-top: 20px;
+}
+
+.gallery-item {
+    /* ANTERIOR: width: calc(33.333% - 10px); */
+    /* ANTERIOR: max-width: 250px; */
+
+    /* NUEVO: Hacerlo más grande */
+    width: 80%; /* Por ejemplo, que ocupe el 80% del ancho del content-inner-wrapper */
+    max-width: 500px; /* Un máximo para que no se haga demasiado grande en pantallas anchas */
+    /* O un valor fijo si lo prefieres: */
+    /* width: 400px; */
+    
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f0f0f0; /* Placeholder mientras carga la imagen */
+    margin: 0 auto; /* Otra forma de centrar si width es menor que el contenedor */
+}
+
+/* Ya no necesitamos esto si solo hay un item que ocupa más espacio */
+/* .gallery-container .gallery-item:first-child {
+    width: 100%;
+    max-width: 400px; 
+} */
+
+.gallery-item:hover { 
+    transform: scale(1.02); /* Un scale un poco más sutil para una imagen más grande */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15); 
+}
+
+.gallery-thumbnail {
+    width: 100%;
+    height: auto; /* Altura automática basada en aspect-ratio */
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+    /* Usar un aspect ratio aproximado de tus imágenes 4000/1844 */
+    aspect-ratio: 4000 / 1844; 
+}
+
     .gallery-lightbox {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-color: rgba(30, 30, 30, 0.92); z-index: 2100;
@@ -271,12 +305,12 @@
         width: auto; height: auto; max-width: 95%; max-height: 95%;
     }
     .gallery-lightbox-image {
-        display: block; max-width: 100%; max-height: calc(100vh - 120px);
+        display: block; max-width: 100%; max-height: calc(100vh - 120px); /* Espacio para caption y controles */
         object-fit: contain; border-radius: 5px; box-shadow: 0 0 30px rgba(0,0,0,0.5);
-        transform: scale(0.8); opacity: 0;
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease-out;
+        /* La opacidad y transform se manejan en JS para la carga */
+        transition: opacity 0.3s ease-out; /* Transición suave de opacidad */
     }
-    .gallery-lightbox.visible .gallery-lightbox-image { transform: scale(1); opacity: 1; }
+    /* .gallery-lightbox.visible .gallery-lightbox-image { transform: scale(1); opacity: 1; } No necesario aquí si JS lo maneja */
     .gallery-lightbox-close {
         position: absolute; top: 15px; right: 20px; font-size: 2.8em; color: #ccc;
         background: none; border: none; cursor: pointer; transition: color 0.3s ease;
@@ -297,6 +331,7 @@
         padding: 7px 12px; border-radius: 4px; font-size: 0.9em; text-align: center;
         max-width: 90%; box-sizing: border-box; transition: opacity 0.3s ease;
         opacity: 0; word-break: break-word; overflow-wrap: break-word;
+        min-height: 1.5em; /* Para que "Cargando..." tenga espacio */
     }
     .gallery-lightbox.visible .gallery-lightbox-caption { opacity: 1; }
     .gallery-lightbox-caption:empty { display: none; }
@@ -308,7 +343,7 @@
         display: inline-block; 
         cursor: pointer;
         padding: 8px 12px;
-        margin-right: 10px; /* Default margin, may be overridden in media queries */
+        margin-right: 10px;
         color: var(--primary-color);
     }
     .notifications-bell-container:hover {
@@ -320,18 +355,18 @@
     }
     .notifications-badge {
         position: absolute;
-        top: 2px; 
-        right: 2px; 
-        background-color: red;
+        top: 2px;      
+        right: 2px;    
+        background-color: var(--secondary-color); 
         color: white;
-        border-radius: 50%;
-        padding: 1px 5px;
-        font-size: 0.7em;
+        border-radius: 50%; 
+        width: 20px;       
+        height: 20px;      
+        font-size: 0.75em;  
         font-weight: bold;
-        line-height: 1;
-        display: none;
-        min-width: 16px;
-        text-align: center;
+        line-height: 20px; 
+        text-align: center; 
+        display: none;     
     }
     .notifications-badge.visible {
         display: block;
@@ -414,9 +449,7 @@
         .content-section {
             padding: 45px 0;
         }
-        .gallery-item {
-            width: calc(50% - 7.5px);
-        }
+        /* .gallery-item { width: calc(50% - 7.5px); } Ya no aplica si solo hay 1 miniatura principal */
         .hero-section h1 {
             font-size: 3em;
         }
@@ -429,35 +462,32 @@
         .hero-section h1 { font-size: 2.5em; } 
         .hero-section .hero-subtitle { font-size: 1.2em; }
 
-        /* NAV BAR: Attempt to keep nav items and bell icon inline */
-        .main-nav .content-inner-wrapper {
-            /* flex-direction: row; /* This is the default, no need to explicitly set */
-            /* align-items: center; /* This is the default */
-        }
         .main-nav .content-inner-wrapper ul {
-            /* order: 0; /* Default */
-            /* margin-bottom: 0; /* Default */
-            /* flex-grow: 1; /* Default */
-            justify-content: flex-start; /* Align nav items to the left */
-            flex-wrap: wrap; /* Allow nav items to wrap if they still don't fit */
+            justify-content: flex-start; 
+            flex-wrap: wrap; 
         }
         .main-nav li {
-            margin: 5px 6px; /* Reduce horizontal margin for nav items */
+            margin: 5px 6px;
         }
         .main-nav a {
-            padding: 7px 10px; /* Reduce padding for nav links */
-            font-size: 0.88em;  /* Slightly smaller font for nav links */
+            padding: 7px 10px; 
+            font-size: 0.88em;  
         }
         .notifications-bell-container {
-            /* order: 0; /* Default */
-            margin-right: 0; /* Remove specific desktop margin */
-            margin-left: 8px; /* Add a little space if nav items wrap close to it */
+            margin-right: 0; 
+            margin-left: 8px; 
             padding: 6px 8px;
         }
         .notifications-icon { font-size: 1.4em; }
+        .notifications-badge {
+            top: 1px; 
+            right: 1px; 
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            font-size: 0.7em;
+        }
 
-
-        /* General content adjustments for tablets */
         .content-section {
             padding: 40px 0;
         }
@@ -523,10 +553,9 @@
         .gallery-lightbox-next { right: 10px; }
         .gallery-lightbox-caption { font-size: 0.85em; }
 
-        /* Notification Panel adjustments for tablets */
         .notifications-panel {
             width: 90vw; 
-            max-width: 360px; /* Slightly reduced max-width */
+            max-width: 360px; 
         }
          .notifications-panel h3 {
             font-size: 1.05em; padding: 10px 12px;
@@ -550,8 +579,9 @@
         .hero-section .hero-subtitle {
             font-size: 1em; max-width: 90%;
         }
+        /* Si solo hay una miniatura de galería, ajustar su tamaño para móvil */
+        /* .gallery-container .gallery-item:first-child { max-width: 90%; } */
 
-        /* NAV BAR: Stack nav links and bell icon on very small screens */
         .main-nav .content-inner-wrapper {
             flex-direction: column; 
             align-items: center; 
@@ -560,20 +590,27 @@
             order: 1; 
             margin-bottom: 8px; 
             padding-left: 0;
-            flex-grow: 0; /* Don't let ul grow when stacked */
-            justify-content: center; /* Center links */
+            flex-grow: 0; 
+            justify-content: center; 
         }
         .main-nav li { margin: 4px 5px; } 
         .main-nav a { padding: 6px 8px; font-size: 0.85em; }
         
         .notifications-bell-container {
             order: 2; 
-            margin-left: 0; /* Reset margin from tablet view */
-            margin-right: 0; /* Reset margin from desktop view */
+            margin-left: 0; 
+            margin-right: 0; 
             padding: 6px 8px;
         }
         .notifications-icon { font-size: 1.3em; }
-        .notifications-badge { top: 0px; right: 0px; padding: 0px 4px; font-size: 0.65em; min-width: 14px; }
+        .notifications-badge { 
+            top: 0px; 
+            right: 0px; 
+            width: 16px; 
+            height: 16px;
+            line-height: 16px;
+            font-size: 0.65em; 
+        }
 
         .content-section { padding: 30px 0; }
         .content-inner-wrapper { padding-left: 10px; padding-right: 10px; } 
@@ -602,8 +639,8 @@
         }
         .nivel-btn { padding: 12px 15px; font-size: 0.95em; width: 100%; }
 
-        .gallery-item { width: 100%; max-width: none; } 
-        .gallery-thumbnail { height: 200px; }
+        /* .gallery-item { width: 100%; max-width: none; } Ya no aplica si solo hay 1 miniatura principal */
+        /* .gallery-thumbnail { height: 200px; } */
 
         .detalle-nivel-content { padding: 20px 15px; }
         .detalle-nivel-content h2 { font-size: 1.4em; }
@@ -657,8 +694,31 @@
                 <p class="no-notifications">Cargando notificaciones...</p>
             </div>
         </div>
-        <!-- Resto del HTML como lo tenías -->
-        <section id="descripcion" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-landmark" aria-hidden="true"></i> Nuestra Historia e Identidad </h2> <p data-aos="fade-up" data-aos-delay="50" data-aos-offset="100">Fundado en 1932 por iniciativa vecinal, el Liceo N°1 de Paso de los Toros es un referente educativo. Desde 1962, se ubica en Aparicio Saravia y Adelaida Puyol, con importantes ampliaciones en 2014-2015 que modernizaron sus instalaciones.</p> <p data-aos="fade-up" data-aos-delay="100" data-aos-offset="100">Hoy, acoge a más de x estudiantes en Educación Media Básica y Bachillerato, con todas las orientaciones disponibles. Un dedicado equipo de más de x docentes y x adscriptos impulsa un proyecto educativo enfocado en la inclusión, participación y el acompañamiento integral de los estudiantes.</p> </div> </section> <section id="niveles-educativos" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-layer-group" aria-hidden="true"></i> Niveles Educativos </h2> <p data-aos="fade-up" data-aos-offset="100">El Liceo N°1 ofrece una completa trayectoria educativa, desde la Educación Media Básica hasta el Bachillerato. Haz clic en cada nivel para conocer más detalles sobre su propuesta, plan de estudios y cómo se articula con el desarrollo de nuestros estudiantes.</p> <div class="niveles-botones" data-aos="fade-up" data-aos-delay="100" data-aos-offset="100"> <button class="nivel-btn" data-target="seccion-media">Educación Media Básica</button> <button class="nivel-btn" data-target="seccion-bachillerato">Bachillerato</button> </div> </div> </section> <section id="galeria" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-images" aria-hidden="true"></i> Galería del Liceo </h2> <p data-aos="fade-up" data-aos-offset="100">Explora algunos momentos y vistas de nuestro liceo. Haz clic en una imagen para verla en detalle.</p> <div class="gallery-container" data-aos="fade-up" data-aos-delay="100" data-aos-offset="100"> <div class="gallery-item"><img src="exterior2.jpg" alt="Fachada principal del Liceo N°1" class="gallery-thumbnail"></div> <div class="gallery-item"><img src="interior.jpg" alt="Vista interior del Liceo con pasillos y luz natural" class="gallery-thumbnail"></div> <div class="gallery-item"><img src="patio.jpg" alt="Patio del Liceo con bancos y áreas verdes" class="gallery-thumbnail"></div> </div> </div> </section> <section id="contacto-horarios" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-id-card-clip" aria-hidden="true"></i> Información y Horarios </h2> <ul class="info-list"> <li data-aos="fade-up" data-aos-offset="50"><span class="icon-container"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span><span class="info-label">Dirección:</span><span class="info-value">Aparicio Saravia 773, 45100 Paso de los Toros, Dpto. de Tacuarembó.</span></li> <li data-aos="fade-up" data-aos-delay="50" data-aos-offset="50"><span class="icon-container"><i class="fas fa-phone-volume" aria-hidden="true"></i></span><span class="info-label">Teléfono:</span><span class="info-value">4664 2136</span></li> <li data-aos="fade-up" data-aos-delay="100" data-aos-offset="50"><span class="icon-container"><i class="fab fa-instagram" aria-hidden="true"></i></span><span class="info-label">Instagram:</span><span class="info-value">liceo1pasodelostoros</span></li> </ul> <h3 class="subsection-title" data-aos="fade-right" data-aos-offset="100"><i class="fas fa-calendar-alt" aria-hidden="true"></i>Horario de Atención</h3> <ul class="info-list"> <li data-aos="fade-up" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Lunes:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="50" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Martes:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="100" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Miércoles:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="150" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Jueves:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="200" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Viernes:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="250" data-aos-offset="50"><span class="icon-container"><i class="fas fa-door-closed" aria-hidden="true"></i></span><span class="info-label">Sábado:</span> <span class="info-value">Cerrado</span></li> <li data-aos="fade-up" data-aos-delay="300" data-aos-offset="50"><span class="icon-container"><i class="fas fa-door-closed" aria-hidden="true"></i></span><span class="info-label">Domingo:</span> <span class="info-value">Cerrado</span></li> </ul> </div> </section> <section id="ubicacion" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-compass" aria-hidden="true"></i> Encuéntranos </h2> <p data-aos="fade-up" data-aos-offset="100">Visítanos o explora nuestra ubicación en el mapa:</p> <div class="map-link-container" data-aos="zoom-in" data-aos-offset="100"> <button id="googleMapsButton" class="map-link" data-url="https://www.google.com/maps/place/Liceo+numero+1/@-32.8092239,-56.5157008,17.05z/data=!4m6!3m5!1s0x95a64174db22c77b:0x48d2ff2e276d1161!8m2!3d-32.8092421!4d-56.5132229!16s%2Fg%2F11clmpl3r2?entry=ttu&g_ep=EgoyMDI1MDUxMS4wIKXMDSoASAFQAw%3D%3D"> Ver en Google Maps <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> </button> </div> </div> </section> <footer class="main-footer" data-aos="fade-in" data-aos-duration="500"> <div class="content-inner-wrapper"> <p>© <span id="currentYear"></span> Liceo N°1 de Paso de los Toros. Diseño web hecho por un estudiante del Liceo 1 (<i class="fab fa-x-twitter" aria-hidden="true"></i>: WolfInk_Devs)</p> </div> </footer>
+        
+        <section id="descripcion" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-landmark" aria-hidden="true"></i> Nuestra Historia e Identidad </h2> <p data-aos="fade-up" data-aos-delay="50" data-aos-offset="100">Fundado en 1932 por iniciativa vecinal, el Liceo N°1 de Paso de los Toros es un referente educativo. Desde 1962, se ubica en Aparicio Saravia y Adelaida Puyol, con importantes ampliaciones en 2014-2015 que modernizaron sus instalaciones.</p> <p data-aos="fade-up" data-aos-delay="100" data-aos-offset="100">Hoy, acoge a más de x estudiantes en Educación Media Básica y Bachillerato, con todas las orientaciones disponibles. Un dedicado equipo de más de x docentes y x adscriptos impulsa un proyecto educativo enfocado en la inclusión, participación y el acompañamiento integral de los estudiantes.</p> </div> </section> <section id="niveles-educativos" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-layer-group" aria-hidden="true"></i> Niveles Educativos </h2> <p data-aos="fade-up" data-aos-offset="100">El Liceo N°1 ofrece una completa trayectoria educativa, desde la Educación Media Básica hasta el Bachillerato. Haz clic en cada nivel para conocer más detalles sobre su propuesta, plan de estudios y cómo se articula con el desarrollo de nuestros estudiantes.</p> <div class="niveles-botones" data-aos="fade-up" data-aos-delay="100" data-aos-offset="100"> <button class="nivel-btn" data-target="seccion-media">Educación Media Básica</button> <button class="nivel-btn" data-target="seccion-bachillerato">Bachillerato</button> </div> </div> </section> 
+        
+        <section id="galeria" class="content-section"> 
+            <div class="content-inner-wrapper"> 
+                <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> 
+                    <i class="fas fa-images" aria-hidden="true"></i> Galería del Liceo 
+                </h2> 
+                <p data-aos="fade-up" data-aos-offset="100">
+                    Explora algunos momentos y vistas de nuestro liceo. Haz clic en la imagen para verla en detalle y navegar.
+                </p> 
+                <div class="gallery-container" data-aos="fade-up" data-aos-delay="100" data-aos-offset="100"> 
+                    <!-- Solo la primera imagen es explícitamente renderizada aquí.
+                         El JS se encargará de sus atributos y evento de clic.
+                         Las otras imágenes de la galería se definen en el array 'imagesData' en JS. -->
+                    <div class="gallery-item">
+                        <img src="" alt="" class="gallery-thumbnail">
+                         <!-- src, alt, width, height, loading, decoding se añadirán por JS -->
+                    </div>
+                    <!-- No añadir más .gallery-item aquí si se manejan desde JS -->
+                </div> 
+            </div> 
+        </section> 
+        
+        <section id="contacto-horarios" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-id-card-clip" aria-hidden="true"></i> Información y Horarios </h2> <ul class="info-list"> <li data-aos="fade-up" data-aos-offset="50"><span class="icon-container"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span><span class="info-label">Dirección:</span><span class="info-value">Aparicio Saravia 773, 45100 Paso de los Toros, Dpto. de Tacuarembó.</span></li> <li data-aos="fade-up" data-aos-delay="50" data-aos-offset="50"><span class="icon-container"><i class="fas fa-phone-volume" aria-hidden="true"></i></span><span class="info-label">Teléfono:</span><span class="info-value">4664 2136</span></li> <li data-aos="fade-up" data-aos-delay="100" data-aos-offset="50"><span class="icon-container"><i class="fab fa-instagram" aria-hidden="true"></i></span><span class="info-label">Instagram:</span><span class="info-value">liceo1pasodelostoros</span></li> </ul> <h3 class="subsection-title" data-aos="fade-right" data-aos-offset="100"><i class="fas fa-calendar-alt" aria-hidden="true"></i>Horario de Atención</h3> <ul class="info-list"> <li data-aos="fade-up" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Lunes:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="50" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Martes:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="100" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Miércoles:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="150" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Jueves:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="200" data-aos-offset="50"><span class="icon-container"><i class="far fa-clock" aria-hidden="true"></i></span><span class="info-label">Viernes:</span> <span class="info-value">9:00 a.m. – 9:00 p.m.</span></li> <li data-aos="fade-up" data-aos-delay="250" data-aos-offset="50"><span class="icon-container"><i class="fas fa-door-closed" aria-hidden="true"></i></span><span class="info-label">Sábado:</span> <span class="info-value">Cerrado</span></li> <li data-aos="fade-up" data-aos-delay="300" data-aos-offset="50"><span class="icon-container"><i class="fas fa-door-closed" aria-hidden="true"></i></span><span class="info-label">Domingo:</span> <span class="info-value">Cerrado</span></li> </ul> </div> </section> <section id="ubicacion" class="content-section"> <div class="content-inner-wrapper"> <h2 class="section-title" data-aos="fade-right" data-aos-offset="100"> <i class="fas fa-compass" aria-hidden="true"></i> Encuéntranos </h2> <p data-aos="fade-up" data-aos-offset="100">Visítanos o explora nuestra ubicación en el mapa:</p> <div class="map-link-container" data-aos="zoom-in" data-aos-offset="100"> <button id="googleMapsButton" class="map-link" data-url="https://www.google.com/maps/place/Liceo+numero+1/@-32.8092239,-56.5157008,17.05z/data=!4m6!3m5!1s0x95a64174db22c77b:0x48d2ff2e276d1161!8m2!3d-32.8092421!4d-56.5132229!16s%2Fg%2F11clmpl3r2?entry=ttu&g_ep=EgoyMDI1MDUxMS4wIKXMDSoASAFQAw%3D%3D"> Ver en Google Maps <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> </button> </div> </div> </section> <footer class="main-footer" data-aos="fade-in" data-aos-duration="500"> <div class="content-inner-wrapper"> <p>© <span id="currentYear"></span> Liceo N°1 de Paso de los Toros. Diseño web hecho por un estudiante del Liceo 1 (<i class="fab fa-x-twitter" aria-hidden="true"></i>: WolfInk_Devs)</p> </div> </footer>
     </div>
     <div id="seccion-media" class="detalle-nivel-overlay"> <div class="detalle-nivel-content"> <button class="cerrar-overlay-btn" data-close="seccion-media" aria-label="Cerrar"><i class="fas fa-times" aria-hidden="true"></i></button> <h2><i class="fas fa-book-reader" aria-hidden="true"></i> Educación Media Básica</h2> <p>La Educación Media Básica, también conocida como Ciclo Básico, comprende los primeros tres años de la educación secundaria (1°, 2° y 3° año). Este ciclo es fundamental para consolidar los aprendizajes de la educación primaria y preparar a los estudiantes para los desafíos del Bachillerato.</p> <p>Nuestro enfoque se centra en desarrollar competencias clave, fomentar el pensamiento crítico y la autonomía del estudiante. Ofrecemos un acompañamiento cercano para asegurar una transición exitosa y motivadora. Las asignaturas incluyen Matemáticas, Idioma Español, Ciencias Físicas, Ciencias Computacionales, Biología, Historia, Geografía, Inglés, Arte plastica, Música, y Educación Física.</p> <div class="detalle-nivel-nav"> <button class="nivel-nav-btn" data-open="seccion-bachillerato" data-close-current="seccion-media">Ver Bachillerato</button> <button class="nivel-nav-btn principal-btn" data-close="seccion-media">Volver al Inicio</button> </div> </div> </div> <div id="seccion-bachillerato" class="detalle-nivel-overlay"> <div class="detalle-nivel-content"> <button class="cerrar-overlay-btn" data-close="seccion-bachillerato" aria-label="Cerrar"><i class="fas fa-times" aria-hidden="true"></i></button> <h2><i class="fas fa-user-graduate" aria-hidden="true"></i> Bachillerato</h2> <p>El Bachillerato (4°, 5° y 6° año) permite a los estudiantes profundizar en áreas de conocimiento específicas, preparándolos para la educación superior o el mundo laboral. En el Liceo N°1, ofrecemos todas las orientaciones para que cada estudiante pueda seguir su vocación.</p> <p>Las materias disponibles son: (Insertar materias)</p> <div class="detalle-nivel-nav"> <button class="nivel-nav-btn" data-open="seccion-media" data-close-current="seccion-bachillerato">Ver Educación Media</button> <button class="nivel-nav-btn principal-btn" data-close="seccion-bachillerato">Volver al Inicio</button> </div> </div> </div> <div id="gallery-lightbox" class="gallery-lightbox"> <span class="gallery-lightbox-close" aria-label="Cerrar vista ampliada">×</span> <button class="gallery-lightbox-prev" aria-label="Imagen anterior">❮</button> <button class="gallery-lightbox-next" aria-label="Siguiente imagen">❯</button> <div class="gallery-lightbox-image-container"> <img class="gallery-lightbox-image" src="" alt="Imagen ampliada"> <div class="gallery-lightbox-caption"></div> </div> </div> <a href="#" class="back-to-top" aria-label="Volver arriba"><i class="fas fa-chevron-up" aria-hidden="true"></i></a> <div id="logoOverlay" class="logo-overlay"> <img id="mapsLogoImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Google_Maps_icon_%282020%29.svg/1200px-Google_Maps_icon_%282020%29.svg.png" alt="Google Maps Logo"> </div>
 
@@ -676,6 +736,7 @@
 
         AOS.init({ duration: 600, once: true, offset: 50 });
         document.getElementById('currentYear').textContent = new Date().getFullYear();
+        const body = document.body; // Definir body globalmente para el script
 
         document.querySelectorAll('.main-nav a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -685,7 +746,7 @@
                     document.querySelectorAll('.main-nav a').forEach(link => link.classList.remove('active'));
                     this.classList.add('active');
                     if (lenis) { lenis.scrollTo(targetElement, { duration: 1.5 }); }
-                    else { targetElement.scrollIntoView({ behavior: "auto" }); }
+                    else { targetElement.scrollIntoView({ behavior: "auto" }); } 
                 }
             });
         });
@@ -694,29 +755,38 @@
         const logoOverlay = document.getElementById('logoOverlay');
         const mapsLogoImage = document.getElementById('mapsLogoImage');
         const googleMapsUrl = googleMapsButton?.dataset.url;
+
         if (googleMapsButton && logoOverlay && mapsLogoImage && googleMapsUrl) {
             googleMapsButton.addEventListener('click', function() {
                 if (lenis) lenis.stop();
                 document.body.classList.add('overlay-active');
                 logoOverlay.classList.add('visible');
                 mapsLogoImage.classList.remove('pop-out'); mapsLogoImage.classList.add('pop-in');
+                
                 setTimeout(() => {
                     mapsLogoImage.classList.remove('pop-in'); mapsLogoImage.classList.add('pop-out');
                     setTimeout(() => {
                         logoOverlay.classList.remove('visible');
-                        if (!document.querySelector('.detalle-nivel-overlay.visible') && !document.querySelector('#gallery-lightbox.visible') && !document.querySelector('#notificationsPanel.visible')) {
+                        if (!document.querySelector('.detalle-nivel-overlay.visible') && 
+                            !document.querySelector('#gallery-lightbox.visible') && 
+                            !document.querySelector('#notificationsPanel.visible')) {
                             document.body.classList.remove('overlay-active');
                             if (lenis) lenis.start();
                         }
                         setTimeout(() => {
                            window.open(googleMapsUrl, '_blank', 'noopener,noreferrer');
-                           mapsLogoImage.classList.remove('pop-out'); mapsLogoImage.style.opacity = '0'; mapsLogoImage.style.transform = 'scale(0)';
-                        }, 300);
-                    }, 400);
-                }, 1500);
+                           mapsLogoImage.classList.remove('pop-out'); 
+                           mapsLogoImage.style.opacity = '0'; 
+                           mapsLogoImage.style.transform = 'scale(0)';
+                        }, 300); 
+                    }, 400); 
+                }, 1500); 
             });
             mapsLogoImage.addEventListener('animationend', function(event) {
-                if (event.animationName === 'popInAnimation') { mapsLogoImage.style.opacity = '1'; mapsLogoImage.style.transform = 'scale(1)';}
+                if (event.animationName === 'popInAnimation') { 
+                    mapsLogoImage.style.opacity = '1'; 
+                    mapsLogoImage.style.transform = 'scale(1)';
+                }
             });
         }
 
@@ -724,100 +794,196 @@
         if (backToTopButton) {
             const scrollHandler = () => {
                 const offset = lenis ? lenis.scroll : window.pageYOffset;
-                if (offset > 300) { backToTopButton.classList.add("visible"); } else { backToTopButton.classList.remove("visible"); }
+                backToTopButton.classList.toggle("visible", offset > 300);
             };
-            if (lenis) { lenis.on('scroll', scrollHandler); } else { window.addEventListener("scroll", scrollHandler); }
+            if (lenis) { lenis.on('scroll', scrollHandler); } 
+            else { window.addEventListener("scroll", scrollHandler); }
+            
             backToTopButton.addEventListener("click", (e) => {
                 e.preventDefault();
-                if (lenis) { lenis.scrollTo(0, { duration: 1.5 }); } else { window.scrollTo({ top: 0, behavior: "auto" }); }
+                if (lenis) { lenis.scrollTo(0, { duration: 1.5 }); } 
+                else { window.scrollTo({ top: 0, behavior: "auto" }); }
             });
         }
 
         const nivelOpenButtons = document.querySelectorAll('.nivel-btn, .nivel-nav-btn[data-open]');
         const nivelCloseButtons = document.querySelectorAll('.cerrar-overlay-btn, .nivel-nav-btn[data-close]');
-        const body = document.body;
+        
         function openNivelOverlay(overlayId) {
             const overlay = document.getElementById(overlayId);
-            if (overlay) { if (lenis) lenis.stop(); overlay.classList.add('visible'); body.classList.add('overlay-active'); overlay.scrollTop = 0; }
+            if (overlay) { 
+                if (lenis) lenis.stop(); 
+                overlay.classList.add('visible'); 
+                body.classList.add('overlay-active'); 
+                overlay.scrollTop = 0; 
+            }
         }
         function closeNivelOverlay(overlayId) {
             const overlay = document.getElementById(overlayId);
             if (overlay) { overlay.classList.remove('visible'); }
-            if (!document.querySelector('.detalle-nivel-overlay.visible') && !document.querySelector('#gallery-lightbox.visible') && !document.querySelector('.logo-overlay.visible') && !document.querySelector('#notificationsPanel.visible')) {
-                body.classList.remove('overlay-active'); if (lenis) lenis.start();
+            if (!document.querySelector('.detalle-nivel-overlay.visible') && 
+                !document.querySelector('#gallery-lightbox.visible') && 
+                !document.querySelector('.logo-overlay.visible') &&
+                !document.querySelector('#notificationsPanel.visible')) {
+                body.classList.remove('overlay-active'); 
+                if (lenis) lenis.start();
             }
         }
         nivelOpenButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const targetOverlayId = button.dataset.target || button.dataset.open;
                 const currentOverlayIdToClose = button.dataset.closeCurrent;
-                if (currentOverlayIdToClose) { closeNivelOverlay(currentOverlayIdToClose); setTimeout(() => { openNivelOverlay(targetOverlayId); }, 50); }
-                else { openNivelOverlay(targetOverlayId); }
+                if (currentOverlayIdToClose) { 
+                    closeNivelOverlay(currentOverlayIdToClose); 
+                    setTimeout(() => { openNivelOverlay(targetOverlayId); }, 50); 
+                } else { 
+                    openNivelOverlay(targetOverlayId); 
+                }
             });
         });
         nivelCloseButtons.forEach(button => {
             button.addEventListener('click', () => { closeNivelOverlay(button.dataset.close); });
         });
 
-        const galleryItems = document.querySelectorAll('.gallery-item');
+        // --- LÓGICA DE GALERÍA MODIFICADA ---
+        const galleryContainer = document.querySelector('#galeria .gallery-container');
         const galleryLightbox = document.getElementById('gallery-lightbox');
-        let currentImageIndex; const imagesData = [];
-        function openGalleryLightbox(index) {
-            if (index < 0 || index >= imagesData.length) return;
-            currentImageIndex = index; updateGalleryLightboxImage(); if (lenis) lenis.stop();
-            galleryLightbox.classList.add('visible'); body.classList.add('overlay-active'); updateGalleryNavigationButtons();
-        }
-        function closeGalleryLightbox() {
-            if (galleryLightbox) {
+        let currentGalleryImageIndex; // Renombrado para evitar conflicto
+
+        // Definir los datos de las imágenes directamente aquí
+        const galleryImagesData = [ // Renombrado para evitar conflicto
+            { 
+                thumbnailSrc: "exterior2.jpg", 
+                fullSrc: "exterior2.jpg", 
+                alt: "Fachada principal del Liceo N°1",
+                originalWidth: 4000, 
+                originalHeight: 1844 
+            },
+            { 
+                fullSrc: "interior.jpg", 
+                alt: "Vista interior del Liceo con pasillos y luz natural",
+                originalWidth: 4000, 
+                originalHeight: 1844
+            },
+            { 
+                fullSrc: "patio.jpg", 
+                alt: "Patio del Liceo con bancos y áreas verdes",
+                originalWidth: 4000,
+                originalHeight: 1844
+            }
+        ];
+
+        if (galleryContainer && galleryLightbox && galleryImagesData.length > 0) {
+            const lightImg = galleryLightbox.querySelector('.gallery-lightbox-image');
+            const closeBtn = galleryLightbox.querySelector('.gallery-lightbox-close');
+            const prevBtn = galleryLightbox.querySelector('.gallery-lightbox-prev');
+            const nextBtn = galleryLightbox.querySelector('.gallery-lightbox-next');
+            const caption = galleryLightbox.querySelector('.gallery-lightbox-caption');
+
+            // Configurar la primera (y única) miniatura visible en el HTML
+            const firstGalleryItemInHtml = galleryContainer.querySelector('.gallery-item');
+            if (firstGalleryItemInHtml) {
+                const firstThumbnailElement = firstGalleryItemInHtml.querySelector('.gallery-thumbnail');
+                if (firstThumbnailElement && galleryImagesData[0]) {
+                    const firstImageData = galleryImagesData[0];
+                    firstThumbnailElement.src = firstImageData.thumbnailSrc; // Usará la imagen grande como miniatura
+                    firstThumbnailElement.alt = firstImageData.alt;
+                    // Atributos para ayudar con el aspect ratio y carga diferida
+                    firstThumbnailElement.setAttribute('width', firstImageData.originalWidth / 10); // Un valor proporcional más pequeño
+                    firstThumbnailElement.setAttribute('height', firstImageData.originalHeight / 10);
+                    firstThumbnailElement.setAttribute('loading', 'lazy');
+                    firstThumbnailElement.setAttribute('decoding', 'async');
+                    
+                    firstGalleryItemInHtml.addEventListener('click', () => openGalleryLightbox(0));
+                }
+            }
+
+            function openGalleryLightbox(index) {
+                if (index < 0 || index >= galleryImagesData.length || !lightImg) return;
+                currentGalleryImageIndex = index;
+                updateGalleryLightboxImage(); 
+                if (lenis) lenis.stop();
+                galleryLightbox.classList.add('visible');
+                body.classList.add('overlay-active');
+                updateGalleryNavigationButtons();
+            }
+
+            function closeGalleryLightbox() {
                 galleryLightbox.classList.remove('visible');
-                if (!document.querySelector('.detalle-nivel-overlay.visible') && !document.querySelector('.logo-overlay.visible') && !document.querySelector('#notificationsPanel.visible')) {
-                    body.classList.remove('overlay-active'); if (lenis) lenis.start();
+                // if (lightImg) { lightImg.src = ""; } // Opcional: Limpiar src para liberar memoria
+                if (!document.querySelector('.detalle-nivel-overlay.visible') &&
+                    !document.querySelector('.logo-overlay.visible') &&
+                    !document.querySelector('#notificationsPanel.visible')) {
+                    body.classList.remove('overlay-active');
+                    if (lenis) lenis.start();
                 }
             }
-        }
-        if (galleryLightbox) {
-            const lightImg = galleryLightbox.querySelector('.gallery-lightbox-image'), closeBtn = galleryLightbox.querySelector('.gallery-lightbox-close'),
-                  prevBtn = galleryLightbox.querySelector('.gallery-lightbox-prev'), nextBtn = galleryLightbox.querySelector('.gallery-lightbox-next'),
-                  caption = galleryLightbox.querySelector('.gallery-lightbox-caption');
-            galleryItems.forEach((item, index) => {
-                const img = item.querySelector('.gallery-thumbnail');
-                if (img) { imagesData.push({ src: img.src, alt: img.alt || 'Imagen' }); item.addEventListener('click', () => openGalleryLightbox(index));}
-            });
+
             function updateGalleryLightboxImage() {
-                if (imagesData[currentImageIndex]) {
-                    lightImg.style.opacity = '0'; caption.style.opacity = '0';
-                    setTimeout(() => {
-                        lightImg.src = imagesData[currentImageIndex].src; lightImg.alt = imagesData[currentImageIndex].alt;
-                        caption.textContent = imagesData[currentImageIndex].alt; lightImg.style.opacity = '1';
-                        if (imagesData[currentImageIndex].alt?.trim()) { caption.style.opacity = '1'; } else { caption.style.opacity = '0'; }
-                    }, 50);
+                if (galleryImagesData[currentGalleryImageIndex] && lightImg && caption) {
+                    lightImg.style.opacity = '0'; 
+                    caption.style.opacity = '1'; // Mostrar caption inmediatamente
+                    caption.textContent = "Cargando..."; 
+
+                    const currentImageData = galleryImagesData[currentGalleryImageIndex];
+                    const tempImg = new Image();
+                    tempImg.onload = () => {
+                        lightImg.src = tempImg.src;
+                        lightImg.alt = currentImageData.alt;
+                        lightImg.style.opacity = '1';
+                        caption.textContent = currentImageData.alt;
+                        if (!currentImageData.alt?.trim()) {
+                           caption.style.opacity = '0'; // Ocultar si no hay caption
+                        }
+                    };
+                    tempImg.onerror = () => {
+                        caption.textContent = "Error al cargar la imagen.";
+                        lightImg.alt = "Error de carga";
+                        lightImg.style.opacity = '1'; // Mostrar el error
+                    };
+                    tempImg.src = currentImageData.fullSrc;
                 }
             }
-            function showPrevImg() { if (currentImageIndex > 0) openGalleryLightbox(currentImageIndex - 1); }
-            function showNextImg() { if (currentImageIndex < imagesData.length - 1) openGalleryLightbox(currentImageIndex + 1); }
+
+            function showPrevImg() {
+                if (currentGalleryImageIndex > 0) {
+                    openGalleryLightbox(currentGalleryImageIndex - 1);
+                }
+            }
+            function showNextImg() {
+                if (currentGalleryImageIndex < galleryImagesData.length - 1) {
+                    openGalleryLightbox(currentGalleryImageIndex + 1);
+                }
+            }
+
             function updateGalleryNavigationButtons() {
                 if (!prevBtn || !nextBtn) return;
-                if (imagesData.length <= 1) { prevBtn.classList.add('hidden'); nextBtn.classList.add('hidden'); }
-                else { prevBtn.classList.toggle('hidden', currentImageIndex === 0); nextBtn.classList.toggle('hidden', currentImageIndex === imagesData.length - 1); }
+                const hasMultipleImages = galleryImagesData.length > 1;
+                prevBtn.classList.toggle('hidden', !hasMultipleImages || currentGalleryImageIndex === 0);
+                nextBtn.classList.toggle('hidden', !hasMultipleImages || currentGalleryImageIndex === galleryImagesData.length - 1);
             }
+
             if (closeBtn) closeBtn.addEventListener('click', closeGalleryLightbox);
             if (prevBtn) prevBtn.addEventListener('click', showPrevImg);
             if (nextBtn) nextBtn.addEventListener('click', showNextImg);
-            galleryLightbox.addEventListener('click', e => { if (e.target === galleryLightbox) closeGalleryLightbox(); });
-            if (imagesData.length > 0 && prevBtn && nextBtn) updateGalleryNavigationButtons(); else if (prevBtn && nextBtn) { prevBtn.classList.add('hidden'); nextBtn.classList.add('hidden');}
+            galleryLightbox.addEventListener('click', e => {
+                if (e.target === galleryLightbox) closeGalleryLightbox();
+            });
+            if (galleryImagesData.length > 0) updateGalleryNavigationButtons();
         }
 
+
         // --- LÓGICA PARA NOTIFICACIONES CON SUPABASE ---
-        // (Supabase y funciones de notificación como fetch, updateUI, markAsRead, dismiss permanecen igual)
         const notificationsBellContainer = document.getElementById('notificationsBellContainer');
         const notificationsBadge = document.getElementById('notificationsBadge');
         const notificationsPanel = document.getElementById('notificationsPanel');
         const notificationsList = document.getElementById('notificationsList');
-        const notificationsHeader = notificationsPanel.querySelector('h3');
-
+        const notificationsHeader = notificationsPanel?.querySelector('h3'); 
 
         const SUPABASE_PROJECT_URL = 'https://sqyxlggkcgqmytssfjak.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXhsZ2drY2dxbXl0c3NmamFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDU5MDYsImV4cCI6MjA2MzE4MTkwNn0.qd-UKnsp_7GocwfVs55HyInz2OqpS3vgYlbDgVTeCvQ';
+        const PLACEHOLDER_URL_CHECK = 'TU_SUPABASE_PROJECT_URL_AQUI'; 
+        const PLACEHOLDER_KEY_CHECK = 'TU_SUPABASE_ANON_KEY_PUBLICA_AQUI'; 
 
         let supabase = null;
         let currentUserId = localStorage.getItem('anonymousUserId');
@@ -828,158 +994,235 @@
         let allNotifications = [];
 
         function initializeAndRunSupabase() {
-            const PLACEHOLDER_URL_CHECK = 'TU_SUPABASE_PROJECT_URL_AQUI';
-            const PLACEHOLDER_KEY_CHECK = 'TU_SUPABASE_ANON_KEY_PUBLICA_AQUI';
             if (SUPABASE_PROJECT_URL && SUPABASE_ANON_KEY &&
                 SUPABASE_PROJECT_URL.startsWith('https://') &&
                 SUPABASE_PROJECT_URL !== PLACEHOLDER_URL_CHECK &&
                 SUPABASE_ANON_KEY !== PLACEHOLDER_KEY_CHECK) {
-                let SupabaseClientModule = null;
-                if (typeof window.supabase !== 'undefined' && typeof window.supabase.createClient === 'function') { SupabaseClientModule = window.supabase; }
-                else if (typeof window.Supabase !== 'undefined' && typeof window.Supabase.createClient === 'function') { SupabaseClientModule = window.Supabase; }
-                else { console.error("Supabase module or createClient function not defined."); notificationsList.innerHTML = '<p class="no-notifications">Error: Supabase library not accessible.</p>'; return; }
+                
+                let SupabaseClientModule = window.supabase?.createClient ? window.supabase : (window.Supabase?.createClient ? window.Supabase : null);
+
+                if (!SupabaseClientModule) {
+                    console.error("Supabase module or createClient function not defined."); 
+                    if(notificationsList) notificationsList.innerHTML = '<p class="no-notifications">Error: Librería Supabase no accesible.</p>'; 
+                    return; 
+                }
                 try {
                      supabase = SupabaseClientModule.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
-                     if (supabase) { fetchNotifications(); setInterval(fetchNotifications, 60000); }
-                     else { notificationsList.innerHTML = '<p class="no-notifications">Failed to create Supabase client.</p>'; }
-                } catch (e) { console.error("Error initializing Supabase Client:", e); notificationsList.innerHTML = '<p class="no-notifications">Error connecting to notifications.</p>'; }
-            } else { console.warn("Supabase URL or Anon Key not configured as expected."); notificationsList.innerHTML = '<p class="no-notifications">Notifications not configured.</p>'; }
+                     if (supabase) { fetchNotifications(); setInterval(fetchNotifications, 60000); } 
+                     else if(notificationsList) { notificationsList.innerHTML = '<p class="no-notifications">Fallo al crear cliente Supabase.</p>'; }
+                } catch (e) { 
+                    console.error("Error initializing Supabase Client:", e); 
+                    if(notificationsList) notificationsList.innerHTML = '<p class="no-notifications">Error conectando a notificaciones.</p>'; 
+                }
+            } else { 
+                console.warn("Supabase URL or Anon Key not configured as expected."); 
+                if(notificationsList) notificationsList.innerHTML = '<p class="no-notifications">Notificaciones no configuradas.</p>'; 
+            }
         }
 
-        async function fetchNotifications() { if (!supabase) return; try { const { data, error } = await supabase.from('notifications').select('*').order('timestamp', { ascending: false }); if (error) { console.error('Error loading notifications:', error.message); if (!notificationsList.textContent.includes("Error")) { notificationsList.innerHTML = `<p class="no-notifications">Error: ${error.message}</p>`; } return; } if (data) { allNotifications = data.map(notif => ({ ...notif, isRead: notif.read_by_user_ids?.includes(currentUserId) || false, isDismissed: notif.dismissed_by_user_ids?.includes(currentUserId) || false })); updateNotificationsUI(allNotifications); } else { allNotifications = []; updateNotificationsUI(allNotifications); } } catch (e) { console.error('General error fetching notifications:', e); notificationsList.innerHTML = '<p class="no-notifications">Error inesperado.</p>'; } }
-        function updateNotificationsUI(notifications) { const visibleNotifications = notifications.filter(notif => !notif.isDismissed); let unreadCount = 0; if (!visibleNotifications.length) { notificationsList.innerHTML = '<p class="no-notifications">No hay notificaciones.</p>'; } else { notificationsList.innerHTML = ''; visibleNotifications.forEach(notif => { const item = document.createElement('div'); item.classList.add('notification-item'); item.dataset.notificationId = notif.id; if (!notif.isRead) { item.classList.add('unread'); unreadCount++; } const title = notif.title || 'Notif.'; const message = notif.message || 'S/Msg.'; let contentHTML = `<p><strong>${title}</strong></p><p>${message}</p><small>${new Date(notif.timestamp).toLocaleString()}</small>`; if (notif.image_url) contentHTML += `<img src="${notif.image_url}" alt="Img" class="notification-item-image">`; item.innerHTML = contentHTML; const dismissButton = document.createElement('button'); dismissButton.classList.add('notification-dismiss-btn'); dismissButton.innerHTML = '×'; dismissButton.onclick = (e) => { e.stopPropagation(); dismissNotification(notif.id); }; item.appendChild(dismissButton); item.onclick = () => handleNotificationClick(notif.id); notificationsList.appendChild(item); }); } if (unreadCount > 0) { notificationsBadge.textContent = unreadCount; notificationsBadge.classList.add('visible'); } else { notificationsBadge.classList.remove('visible'); notificationsBadge.textContent = ''; } }
-        async function markNotificationAsRead(notificationId) { if (!supabase || !currentUserId) return false; const idx = allNotifications.findIndex(n => n.id == notificationId); if (idx === -1 || allNotifications[idx].isRead) return false; const notif = allNotifications[idx]; try { let readBy = notif.read_by_user_ids ? [...notif.read_by_user_ids] : []; if (!readBy.includes(currentUserId)) readBy.push(currentUserId); else return true; const { error } = await supabase.from('notifications').update({ read_by_user_ids: readBy }).eq('id', notificationId); if (error) throw error; allNotifications[idx].isRead = true; allNotifications[idx].read_by_user_ids = readBy; return true; } catch (e) { console.error('Error marking as read:', e); return false; } }
-        async function handleNotificationClick(notificationId) { const notif = allNotifications.find(n => n.id == notificationId); if (notif && !notif.isDismissed && !notif.isRead) { if (await markNotificationAsRead(notificationId)) updateNotificationsUI(allNotifications); } if (notificationsPanel.classList.contains('visible')) toggleNotificationsPanel(false); }
-        async function dismissNotification(notificationId) { if (!supabase || !currentUserId) return; const idx = allNotifications.findIndex(n => n.id == notificationId); if (idx === -1 || allNotifications[idx].isDismissed) return; let uiUpdate = false; if (!allNotifications[idx].isRead) { if (await markNotificationAsRead(notificationId)) uiUpdate = true; } const notif = allNotifications[idx]; try { let dismissedBy = notif.dismissed_by_user_ids ? [...notif.dismissed_by_user_ids] : []; if (!dismissedBy.includes(currentUserId)) { dismissedBy.push(currentUserId); const { error } = await supabase.from('notifications').update({ dismissed_by_user_ids: dismissedBy }).eq('id', notificationId); if (error) throw error; allNotifications[idx].isDismissed = true; allNotifications[idx].dismissed_by_user_ids = dismissedBy; uiUpdate = true; } else if (!allNotifications[idx].isDismissed) { allNotifications[idx].isDismissed = true; uiUpdate = true;} if (uiUpdate) updateNotificationsUI(allNotifications); } catch (e) { console.error('Error dismissing:', e); } }
+        async function fetchNotifications() { 
+            if (!supabase || !notificationsList) return; 
+            try { 
+                const { data, error } = await supabase.from('notifications').select('*').order('timestamp', { ascending: false }); 
+                if (error) { 
+                    console.error('Error loading notifications:', error.message); 
+                    if (!notificationsList.textContent.includes("Error")) { 
+                        notificationsList.innerHTML = `<p class="no-notifications">Error: ${error.message}</p>`; 
+                    } return; 
+                } 
+                allNotifications = data ? data.map(notif => ({ 
+                    ...notif, 
+                    isRead: notif.read_by_user_ids?.includes(currentUserId) || false, 
+                    isDismissed: notif.dismissed_by_user_ids?.includes(currentUserId) || false 
+                })) : [];
+                updateNotificationsUI(allNotifications); 
+            } catch (e) { 
+                console.error('General error fetching notifications:', e); 
+                notificationsList.innerHTML = '<p class="no-notifications">Error inesperado al cargar notificaciones.</p>'; 
+            } 
+        }
         
-        // --- LÓGICA PARA POSICIONAR Y ARRASTRAR EL PANEL ---
+        function updateNotificationsUI(notifications) { 
+            if (!notificationsList || !notificationsBadge) return;
+            const visibleNotifications = notifications.filter(notif => !notif.isDismissed); 
+            let unreadCount = 0; 
+            
+            if (!visibleNotifications.length) { 
+                notificationsList.innerHTML = '<p class="no-notifications">No hay notificaciones.</p>'; 
+            } else { 
+                notificationsList.innerHTML = ''; 
+                visibleNotifications.forEach(notif => { 
+                    const item = document.createElement('div'); 
+                    item.classList.add('notification-item'); 
+                    item.dataset.notificationId = notif.id; 
+                    if (!notif.isRead) { 
+                        item.classList.add('unread'); 
+                        unreadCount++; 
+                    } 
+                    const title = notif.title || 'Notificación'; 
+                    const message = notif.message || 'Sin mensaje.'; 
+                    let contentHTML = `<p><strong>${title}</strong></p><p>${message}</p><small>${new Date(notif.timestamp).toLocaleString()}</small>`; 
+                    if (notif.image_url) contentHTML += `<img src="${notif.image_url}" alt="Imagen de notificación" class="notification-item-image">`; 
+                    item.innerHTML = contentHTML; 
+                    
+                    const dismissButton = document.createElement('button'); 
+                    dismissButton.classList.add('notification-dismiss-btn'); 
+                    dismissButton.innerHTML = '×'; 
+                    dismissButton.setAttribute('aria-label', 'Descartar notificación');
+                    dismissButton.onclick = (e) => { e.stopPropagation(); dismissNotification(notif.id); }; 
+                    item.appendChild(dismissButton); 
+                    
+                    item.onclick = () => handleNotificationClick(notif.id); 
+                    notificationsList.appendChild(item); 
+                }); 
+            } 
+            
+            if (unreadCount > 0) { 
+                notificationsBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                notificationsBadge.classList.add('visible'); 
+            } else { 
+                notificationsBadge.classList.remove('visible'); 
+                notificationsBadge.textContent = ''; 
+            } 
+        }
+
+        async function markNotificationAsRead(notificationId) { 
+            if (!supabase || !currentUserId) return false; 
+            const idx = allNotifications.findIndex(n => n.id == notificationId); 
+            if (idx === -1 || allNotifications[idx].isRead) return false; 
+            
+            const notif = allNotifications[idx]; 
+            try { 
+                let readBy = notif.read_by_user_ids ? [...notif.read_by_user_ids] : []; 
+                if (!readBy.includes(currentUserId)) readBy.push(currentUserId); 
+                else return true; 
+                
+                const { error } = await supabase.from('notifications').update({ read_by_user_ids: readBy }).eq('id', notificationId); 
+                if (error) throw error; 
+                
+                allNotifications[idx].isRead = true; 
+                allNotifications[idx].read_by_user_ids = readBy; 
+                return true; 
+            } catch (e) { console.error('Error marking as read:', e); return false; } 
+        }
+        
+        async function handleNotificationClick(notificationId) { 
+            const notif = allNotifications.find(n => n.id == notificationId); 
+            if (notif && !notif.isDismissed && !notif.isRead) { 
+                if (await markNotificationAsRead(notificationId)) updateNotificationsUI(allNotifications); 
+            } 
+            if (notificationsPanel?.classList.contains('visible')) toggleNotificationsPanel(false); 
+        }
+
+        async function dismissNotification(notificationId) { 
+            if (!supabase || !currentUserId) return; 
+            const idx = allNotifications.findIndex(n => n.id == notificationId); 
+            if (idx === -1 || allNotifications[idx].isDismissed) return; 
+            
+            let uiUpdateNeeded = false; 
+            if (!allNotifications[idx].isRead) { 
+                if (await markNotificationAsRead(notificationId)) uiUpdateNeeded = true; 
+            } 
+            
+            const notif = allNotifications[idx]; 
+            try { 
+                let dismissedBy = notif.dismissed_by_user_ids ? [...notif.dismissed_by_user_ids] : []; 
+                if (!dismissedBy.includes(currentUserId)) { 
+                    dismissedBy.push(currentUserId); 
+                    const { error } = await supabase.from('notifications').update({ dismissed_by_user_ids: dismissedBy }).eq('id', notificationId); 
+                    if (error) throw error; 
+                    allNotifications[idx].isDismissed = true; 
+                    allNotifications[idx].dismissed_by_user_ids = dismissedBy; 
+                    uiUpdateNeeded = true; 
+                } else if (!allNotifications[idx].isDismissed) { 
+                    allNotifications[idx].isDismissed = true; 
+                    uiUpdateNeeded = true;
+                }
+                if (uiUpdateNeeded) updateNotificationsUI(allNotifications); 
+            } catch (e) { console.error('Error dismissing notification:', e); } 
+        }
+        
         let isDragging = false;
         let dragOffsetX, dragOffsetY;
         let editModeActive = false; 
 
         function togglePanelEditMode() {
+            if (!notificationsPanel || !notificationsHeader) return;
             editModeActive = !editModeActive;
             notificationsPanel.classList.toggle('edit-mode', editModeActive);
             notificationsHeader.style.cursor = editModeActive ? "move" : "default";
             
             if (editModeActive) {
-                console.log("Modo de edición de posición ACTIVADO. Arrastra el panel por su cabecera. Presiona Ctrl+Shift+P para desactivar o Ctrl+C para copiar el código HTML.");
+                console.log("Modo de edición de posición del panel ACTIVADO.");
                 if (!notificationsPanel.classList.contains('visible')) {
                     toggleNotificationsPanel(true); 
                 }
-                // Asegurar que el panel esté en position:fixed para arrastrar libremente
                 notificationsPanel.style.position = 'fixed'; 
-                // Si no tiene top/left (primera vez), centrarlo para empezar a arrastrar
                 if (!notificationsPanel.style.top && !notificationsPanel.style.left) {
                     notificationsPanel.style.left = '50%';
-                    notificationsPanel.style.top = '50%'; // Centrado vertical también para empezar
-                    notificationsPanel.style.transform = 'translate(-50%, -50%)'; // Centrado perfecto
+                    notificationsPanel.style.top = '50%';
+                    notificationsPanel.style.transform = 'translate(-50%, -50%)'; 
                 } else {
-                    // Si ya tiene top/left, quitar cualquier transform que no sea de escala
                     notificationsPanel.style.transform = notificationsPanel.style.transform.replace(/translateX\([^)]+\)/g, '').replace(/translateY\([^)]+\)/g, '').trim() || 'scale(1)';
                 }
             } else {
-                console.log("Modo de edición de posición DESACTIVADO.");
-                // Opcional: podrías volver a posicionarlo debajo de la campana si quieres
-                // positionPanelBelowBell(); 
+                console.log("Modo de edición de posición del panel DESACTIVADO.");
             }
         }
         
         document.addEventListener('keydown', (() => {
-    // Define la secuencia de teclas ultra secreta (después de los modificadores)
-    // Debe teclearse mientras se mantienen presionados Ctrl+Shift+Alt+Meta.
-    // Usa MAYÚSCULAS para la comparación.
-    const TARGET_KEY_SEQUENCE = ['S', 'E', 'C', 'R', 'E', 'T', 'P', 'A', 'N', 'E', 'L', 'A', 'C', 'C', 'E', 'S', 'S', 'K', 'E', 'Y', '2', '0', '2', '4'];
-    let currentTypedSequence = [];
-
-    // La función togglePanelEditMode() se asume que ya está definida en tu código.
-    // function togglePanelEditMode() {
-    //     console.log("Panel edit mode toggled!");
-    // }
-
-    return (event) => {
-        const ctrlPressed = event.ctrlKey;
-        const shiftPressed = event.shiftKey;
-        const altPressed = event.altKey;   // Tecla 'Alt' (Option en Mac)
-        const metaPressed = event.metaKey; // Tecla 'Windows' (Command en Mac)
-
-        const allModifiersPressed = ctrlPressed && shiftPressed && altPressed && metaPressed;
-
-        if (allModifiersPressed) {
-            const keyPressed = event.key.toUpperCase();
-
-            // Ignorar las propias teclas modificadoras si se registran como 'key'
-            // (algunos navegadores/SO podrían hacerlo al mantenerlas presionadas)
-            if (['CONTROL', 'SHIFT', 'ALT', 'META'].includes(keyPressed)) {
-                return;
-            }
-
-            currentTypedSequence.push(keyPressed);
-
-            // Mantener la secuencia actual con una longitud no mayor a la secuencia objetivo.
-            // Si se teclean más teclas, se descartan las más antiguas (efecto de ventana deslizante).
-            while (currentTypedSequence.length > TARGET_KEY_SEQUENCE.length) {
-                currentTypedSequence.shift();
-            }
-
-            // Comprobar si la secuencia actual coincide con la secuencia objetivo
-            if (currentTypedSequence.length === TARGET_KEY_SEQUENCE.length) {
-                const sequenceMatch = currentTypedSequence.every((key, index) => key === TARGET_KEY_SEQUENCE[index]);
-
-                if (sequenceMatch) {
-                    event.preventDefault(); // Prevenir la acción por defecto de la última tecla presionada en la secuencia
-                    togglePanelEditMode();
-                    currentTypedSequence = []; // Reiniciar la secuencia para el próximo intento
+            const TARGET_KEY_SEQUENCE = ['S', 'E', 'C', 'R', 'E', 'T', 'P', 'A', 'N', 'E', 'L', 'A', 'C', 'C', 'E', 'S', 'S', 'K', 'E', 'Y', '2', '0', '2', '4'];
+            let currentTypedSequence = [];
+            return (event) => {
+                const allModifiersPressed = event.ctrlKey && event.shiftKey && event.altKey && event.metaKey;
+                if (allModifiersPressed) {
+                    const keyPressed = event.key.toUpperCase();
+                    if (['CONTROL', 'SHIFT', 'ALT', 'META'].includes(keyPressed)) return; 
+                    currentTypedSequence.push(keyPressed);
+                    while (currentTypedSequence.length > TARGET_KEY_SEQUENCE.length) currentTypedSequence.shift();
+                    if (currentTypedSequence.length === TARGET_KEY_SEQUENCE.length && 
+                        currentTypedSequence.every((key, index) => key === TARGET_KEY_SEQUENCE[index])) {
+                        event.preventDefault(); 
+                        togglePanelEditMode(); 
+                        currentTypedSequence = []; 
+                    }
+                } else { 
+                    if (currentTypedSequence.length > 0) currentTypedSequence = []; 
                 }
-            }
-        } else {
-            // Si no todos los modificadores están presionados (o alguno se soltó),
-            // la secuencia se interrumpe. Reiniciar la secuencia tecleada si había algo.
-            if (currentTypedSequence.length > 0) {
-                currentTypedSequence = [];
-            }
-        }
-    };
-})());
+            };
+        })());
 
         if (notificationsHeader) {
             notificationsHeader.addEventListener('mousedown', (e) => {
-                if (!editModeActive) return; 
+                if (!editModeActive || !notificationsPanel) return; 
                 isDragging = true;
                 notificationsPanel.classList.add('is-dragging');
-                
-                // Usar getComputedStyle para obtener la posición actual si los estilos inline no están seteados aún
                 const panelStyle = getComputedStyle(notificationsPanel);
                 const currentTransform = new DOMMatrix(panelStyle.transform === 'none' ? '' : panelStyle.transform);
-                const currentLeft = parseFloat(panelStyle.left) + currentTransform.e; // e es para translateX
-                const currentTop = parseFloat(panelStyle.top) + currentTransform.f;   // f es para translateY
-
+                const currentLeft = parseFloat(panelStyle.left || "0") + (currentTransform.e || 0); 
+                const currentTop = parseFloat(panelStyle.top || "0") + (currentTransform.f || 0);   
                 dragOffsetX = e.clientX - currentLeft;
                 dragOffsetY = e.clientY - currentTop;
-                
-                notificationsPanel.style.transform = 'none'; // Limpiar transform para arrastre directo con top/left
+                notificationsPanel.style.transform = 'none'; 
                 e.preventDefault();
             });
         }
 
         document.addEventListener('mousemove', (e) => {
-            if (!isDragging || !editModeActive) return;
+            if (!isDragging || !editModeActive || !notificationsPanel) return;
             let newLeft = e.clientX - dragOffsetX;
             let newTop = e.clientY - dragOffsetY;
-
             const minX = 0, minY = 0;
             const maxX = window.innerWidth - notificationsPanel.offsetWidth;
             const maxY = window.innerHeight - notificationsPanel.offsetHeight;
-
             newLeft = Math.max(minX, Math.min(newLeft, maxX));
             newTop = Math.max(minY, Math.min(newTop, maxY));
-
             notificationsPanel.style.left = `${newLeft}px`;
             notificationsPanel.style.top = `${newTop}px`;
         });
 
         document.addEventListener('mouseup', () => {
-            if (!isDragging || !editModeActive) return;
+            if (!isDragging || !editModeActive || !notificationsPanel) return;
             isDragging = false;
             notificationsPanel.classList.remove('is-dragging');
             console.log(`Panel movido a: top: ${notificationsPanel.style.top}, left: ${notificationsPanel.style.left}`);
@@ -987,202 +1230,172 @@
         
         document.addEventListener('keydown', function(event) {
             if (event.ctrlKey && (event.key === 'c' || event.key === 'C')) {
-                if (editModeActive && notificationsPanel.classList.contains('visible')) {
+                if (editModeActive && notificationsPanel?.classList.contains('visible')) {
                     event.preventDefault(); 
-                    
                     const currentTop = notificationsPanel.style.top || getComputedStyle(notificationsPanel).top;
                     const currentLeft = notificationsPanel.style.left || getComputedStyle(notificationsPanel).left;
-
-                    // 1. Clonar el documento entero para no modificar el original directamente al cambiar estilos
+                    
                     const clonedDocument = document.documentElement.cloneNode(true);
                     const clonedPanel = clonedDocument.querySelector('#notificationsPanel');
-                    
                     if (clonedPanel) {
-                        // 2. Encontrar la etiqueta <style> principal (o crear una si no existe)
                         let mainStyleTag = clonedDocument.querySelector('head > style');
-                        if (!mainStyleTag) {
-                            mainStyleTag = clonedDocument.createElement('style');
-                            clonedDocument.head.appendChild(mainStyleTag);
+                        if (!mainStyleTag) { 
+                            mainStyleTag = clonedDocument.createElement('style'); 
+                            clonedDocument.head.appendChild(mainStyleTag); 
                         }
-                        
-                        // 3. Construir la nueva regla CSS para el panel
-                        // Quitar !important de la clase .visible para que el estilo inline tome precedencia
                         let cssRules = mainStyleTag.innerHTML;
-                        cssRules = cssRules.replace(
-                            /\.notifications-panel\.visible\s*\{[^}]*display:\s*flex\s*!important;[^}]*\}/g,
-                            '.notifications-panel.visible { display: flex; opacity: 1; transform: scale(1); }' // Sin !important, y con transform original
-                        );
-                         cssRules = cssRules.replace(
-                            /\.notifications-panel\.visible\[style\*="left"\]\s*\{[^}]*transform:\s*scale\(1\)\s*!important;[^}]*\}/g,
-                            '.notifications-panel.visible[style*="left"] { transform: scale(1); }' 
-                        );
+                        cssRules = cssRules.replace(/\.notifications-panel\.visible\s*\{[^}]*\}/gs, '.notifications-panel.visible { /* Original rules removed for override */ }');
+                        cssRules = cssRules.replace(/\.notifications-panel\.visible\[style\*="left"\]\s*\{[^}]*\}/gs, '.notifications-panel.visible[style*="left"] { /* Original rules removed for override */ }');
 
-
-                        const panelSelector = '.notifications-panel';
-                        const panelStyleRule = `\n${panelSelector} {\n    /* ... tus otros estilos para .notifications-panel ... */\n    top: ${currentTop} !important;\n    left: ${currentLeft} !important;\n    transform: none !important; /* Anular transform si top/left son absolutos */ \n    /* Asegúrate de que position sea fixed o absolute */ \n    position: fixed !important; \n}\n`;
-
-                        // Reemplazar o añadir la regla para .notifications-panel
-                        const ruleRegex = new RegExp(`(${panelSelector}\\s*\\{[^\\}]*\\})`, 's');
-                        if (cssRules.match(ruleRegex)) {
-                            cssRules = cssRules.replace(ruleRegex, panelStyleRule);
+                        const panelSelector = '#notificationsPanel'; 
+                        const panelStyleRule = `\n${panelSelector} {\n    top: ${currentTop} !important;\n    left: ${currentLeft} !important;\n    transform: none !important; \n    position: fixed !important; \n    opacity: 1 !important; \n    display: flex !important; \n}\n`;
+                        
+                        const existingRuleRegex = new RegExp(panelSelector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + `\\s*\\{[^\\}]*\\}`, "s");
+                        if (cssRules.match(existingRuleRegex)) {
+                            cssRules = cssRules.replace(existingRuleRegex, panelStyleRule);
                         } else {
-                            cssRules += panelStyleRule;
+                             cssRules += panelStyleRule;
                         }
                         mainStyleTag.innerHTML = cssRules;
                         
-                        // 4. Opcional: quitar estilos inline del panel clonado si la regla CSS ya los tiene
-                        clonedPanel.style.top = '';
-                        clonedPanel.style.left = '';
-                        clonedPanel.style.transform = '';
+                        clonedPanel.style.top = ''; clonedPanel.style.left = ''; clonedPanel.style.transform = '';
+                        clonedPanel.style.opacity = ''; clonedPanel.style.display = '';
+                        clonedPanel.classList.add('visible'); 
                     }
-
                     const fullHtml = "<!DOCTYPE html>\n" + clonedDocument.outerHTML;
-                    
                     navigator.clipboard.writeText(fullHtml).then(() => {
-                        alert("¡HTML completo con la nueva posición del panel copiado al portapapeles!\n" +
-                              `Posición: top: ${currentTop}, left: ${currentLeft}`);
-                        console.log("HTML completo copiado. Puedes pegarlo en un nuevo archivo .html para probar.");
-                    }).catch(err => {
-                        console.error('Error al copiar el HTML: ', err);
-                        alert("Error al copiar. Revisa la consola.");
-                    });
+                        alert("¡HTML completo con la nueva posición del panel copiado al portapapeles!\n" + `Posición: top: ${currentTop}, left: ${currentLeft}`);
+                        console.log("HTML completo copiado.");
+                    }).catch(err => { console.error('Error al copiar el HTML: ', err); alert("Error al copiar. Revisa la consola."); });
                 }
             }
         });
 
-        function positionPanelBelowBell() { // Función para posicionar debajo de la campana (llamada por toggleNotificationsPanel)
+        function positionPanelBelowBell() { 
             if (!notificationsBellContainer || !notificationsPanel) return;
             const bellRect = notificationsBellContainer.getBoundingClientRect();
-            let panelTop = bellRect.bottom + window.scrollY + 5; // 5px margen
-
+            let panelTop = bellRect.bottom + window.scrollY + 5; 
+            
             let panelWidthForCalc = notificationsPanel.offsetWidth;
-            if (panelWidthForCalc === 0) {
+            if (panelWidthForCalc === 0) { 
                 notificationsPanel.style.visibility = 'hidden'; 
-                notificationsPanel.style.display = 'flex'; // Usar flex si .visible usa flex
+                notificationsPanel.style.display = 'flex'; 
                 panelWidthForCalc = notificationsPanel.offsetWidth;
                 notificationsPanel.style.display = 'none'; 
                 notificationsPanel.style.visibility = 'visible';
             }
-            panelWidthForCalc = panelWidthForCalc || 330; // Fallback
+            panelWidthForCalc = panelWidthForCalc || 330; 
 
             let panelLeft = bellRect.left + window.scrollX + (bellRect.width / 2) - (panelWidthForCalc / 2);
             const screenPadding = 10;
-            if (panelLeft < screenPadding) panelLeft = screenPadding;
+            panelLeft = Math.max(screenPadding, panelLeft);
             if (panelLeft + panelWidthForCalc > (document.documentElement.clientWidth - screenPadding)) {
                 panelLeft = document.documentElement.clientWidth - screenPadding - panelWidthForCalc;
-                if (panelLeft < screenPadding) panelLeft = screenPadding;
+                panelLeft = Math.max(screenPadding, panelLeft); 
             }
-            
-            notificationsPanel.style.position = 'absolute'; // Para que se posicione relativo al scroll
+            notificationsPanel.style.position = 'absolute'; 
             notificationsPanel.style.top = `${panelTop}px`;
             notificationsPanel.style.left = `${panelLeft}px`;
-            notificationsPanel.style.transform = 'scale(0.95) translateY(-5px)'; // Transformación inicial para animación
+            notificationsPanel.style.transform = 'scale(0.95) translateY(-5px)'; 
         }
 
-
         function toggleNotificationsPanel(forceState) {
+            if (!notificationsPanel) return;
             const isVisible = notificationsPanel.classList.contains('visible');
             const show = forceState !== undefined ? forceState : !isVisible;
 
             if (show) {
-                if (!editModeActive) { // Solo posicionar bajo la campana si no estamos en modo edición
+                if (!editModeActive) {
                     positionPanelBelowBell();
-                } else {
-                    // Si está en modo edición y no tiene posición, centrarlo para empezar
-                    if (!notificationsPanel.style.top && !notificationsPanel.style.left) {
+                } else { 
+                    if (!notificationsPanel.style.top && !notificationsPanel.style.left) { 
                         notificationsPanel.style.position = 'fixed';
                         notificationsPanel.style.left = '50%';
                         notificationsPanel.style.top = '50%';
                         notificationsPanel.style.transform = 'translate(-50%, -50%) scale(0.95)';
-                    } else {
-                        // Ya tiene posición por arrastre, solo animar la escala
-                         const currentTransform = notificationsPanel.style.transform;
+                    } else { 
+                         const currentTransform = notificationsPanel.style.transform || "";
                          notificationsPanel.style.transform = currentTransform.replace(/scale\([^)]+\)/g, '').trim() + ' scale(0.95)';
                     }
                 }
-
                 notificationsPanel.classList.add('visible');
-                void notificationsPanel.offsetWidth; // Reflow
+                void notificationsPanel.offsetWidth; 
 
-                // Aplicar transform final para animación visible
                 const finalTransform = notificationsPanel.style.transform || "";
-                if (editModeActive && notificationsPanel.style.left.includes('%')) { // Centrado inicial en modo edición
+                if (editModeActive && notificationsPanel.style.left.includes('%')) { 
                      notificationsPanel.style.transform = 'translate(-50%, -50%) scale(1)';
-                } else if (finalTransform.includes('translateX')) { // Si tiene translateX (centrado bajo campana)
+                } else if (finalTransform.includes('translateX')) { 
                      notificationsPanel.style.transform = finalTransform.replace(/scale\([^)]+\)/g, 'scale(1)').replace(/translateY\([^)]+\)/g, 'translateY(0)');
-                } else { // Si es una posición fija arrastrada (sin translateX) o la de debajo de la campana.
-                     notificationsPanel.style.transform = 'scale(1) translateY(0)';
+                } else { 
+                     notificationsPanel.style.transform = (finalTransform.replace(/scale\([^)]+\)/g, '').trim() || 'none').replace('none', '') + ' scale(1)';
                 }
-                 // Si está en modo edición con top/left ya seteados por arrastre, el transform solo debería ser de escala
-                if (editModeActive && notificationsPanel.style.top && !notificationsPanel.style.left.includes('%')) {
-                    notificationsPanel.style.transform = 'scale(1)';
-                }
-
-
+                
                 if (lenis && !body.classList.contains('overlay-active')) lenis.stop();
                 body.classList.add('overlay-active');
-            } else { // Ocultar
+            } else { 
                 const currentTransform = notificationsPanel.style.transform || "";
                  if (editModeActive && notificationsPanel.style.left.includes('%')) {
                      notificationsPanel.style.transform = 'translate(-50%, -50%) scale(0.95)';
                 } else if (currentTransform.includes('translateX')) {
                      notificationsPanel.style.transform = currentTransform.replace(/scale\([^)]+\)/g, 'scale(0.95)').replace(/translateY\([^)]+\)/g, 'translateY(-5px)');
                 } else {
-                     notificationsPanel.style.transform = 'scale(0.95) translateY(-5px)';
+                     notificationsPanel.style.transform = (currentTransform.replace(/scale\([^)]+\)/g, '').trim() || 'none').replace('none', '') + ' scale(0.95)';
                 }
-                 if (editModeActive && notificationsPanel.style.top && !notificationsPanel.style.left.includes('%')) {
-                    notificationsPanel.style.transform = 'scale(0.95)';
-                }
-
                 notificationsPanel.classList.remove('visible');
-                // El CSS con display:none se aplicará después de la transición si la hay,
-                // o podrías usar un setTimeout si la transición es solo de opacidad/transform.
 
-                if (lenis && !document.querySelector('.detalle-nivel-overlay.visible') && !document.querySelector('#gallery-lightbox.visible') && !document.querySelector('.logo-overlay.visible')) {
-                    lenis.start(); body.classList.remove('overlay-active');
-                } else if (!document.querySelector('.detalle-nivel-overlay.visible') && !document.querySelector('#gallery-lightbox.visible') && !document.querySelector('.logo-overlay.visible')) {
+                if (!document.querySelector('.detalle-nivel-overlay.visible') && 
+                    !document.querySelector('#gallery-lightbox.visible') && 
+                    !document.querySelector('.logo-overlay.visible')) {
                     body.classList.remove('overlay-active');
+                    if (lenis) lenis.start(); 
                 }
             }
         }
 
-        // Event listeners globales
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
-                const visGallery = document.querySelector('#gallery-lightbox.visible');
-                const visNivel = document.querySelector('.detalle-nivel-overlay.visible');
-                const visNotif = notificationsPanel.classList.contains('visible');
+                const visibleGallery = document.querySelector('#gallery-lightbox.visible');
+                const visibleNivelOverlay = document.querySelector('.detalle-nivel-overlay.visible');
+                const notificationsPanelVisible = notificationsPanel?.classList.contains('visible');
 
-                if (editModeActive) { // Si está en modo edición, Escape lo desactiva
+                if (editModeActive) { 
                     togglePanelEditMode();
-                } else if (visGallery) closeGalleryLightbox(); 
-                else if (visNivel) closeNivelOverlay(visNivel.id); 
-                else if (visNotif) toggleNotificationsPanel(false);
+                } else if (visibleGallery) {
+                    closeGalleryLightbox(); 
+                } else if (visibleNivelOverlay) {
+                    closeNivelOverlay(visibleNivelOverlay.id); 
+                } else if (notificationsPanelVisible) {
+                    toggleNotificationsPanel(false);
+                }
             }
         });
         
         if (notificationsBellContainer) {
             notificationsBellContainer.addEventListener('click', e => { 
                 e.stopPropagation(); 
-                if (editModeActive) {
-                    console.log("Modo edición activo. Para cerrar el panel, desactiva el modo edición (Ctrl+Shift+P) y luego haz clic fuera o Esc.");
-                    return;
-                }
+                if (editModeActive) { console.log("Modo de edición de panel activo."); return; }
                 toggleNotificationsPanel(); 
             });
-            notificationsBellContainer.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!editModeActive) toggleNotificationsPanel(); }});
+            notificationsBellContainer.addEventListener('keydown', e => { 
+                if (e.key === 'Enter' || e.key === ' ') { 
+                    e.preventDefault(); 
+                    if (!editModeActive) toggleNotificationsPanel(); 
+                }
+            });
         }
         document.addEventListener('click', e => {
             if (notificationsPanel?.classList.contains('visible') && 
                 !notificationsPanel.contains(e.target) && 
-                !notificationsBellContainer.contains(e.target) &&
-                !editModeActive) { // No cerrar si está en modo edición y se hace clic fuera
+                notificationsBellContainer && !notificationsBellContainer.contains(e.target) &&
+                !editModeActive) { 
                 toggleNotificationsPanel(false);
             }
         });
         
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeAndRunSupabase);
+            document.addEventListener('DOMContentLoaded', () => {
+                initializeAndRunSupabase();
+            });
         } else {
             initializeAndRunSupabase();
         }
